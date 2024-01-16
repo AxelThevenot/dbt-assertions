@@ -7,7 +7,7 @@
     for each row based on its assertions results.
 
     Args:
-        from_column (str): column to read the assertions from.
+        from_column (optional[str]): column to read the assertions from.
 
     Returns:
         str: An ARRAY<STRING> SELECT expression containing error ID for rows that violate assertions.
