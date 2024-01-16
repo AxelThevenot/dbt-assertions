@@ -6,6 +6,7 @@
     You can change this default behaviour specifying a whitelist or blacklist (not both).
 
     Args:
+        from_column (optional[str]): column to read the failed assertions from.
         whitelist (optional[list[str]]): A list of error IDs to whitelist.
             If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
         blacklist (optional[list[str]]): A list of error IDs to blacklist.

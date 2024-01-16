@@ -36,6 +36,11 @@
             'nested_field_4': {'columns': ['sub_key_41', 'sub_key_42'], 'depends_on': []}
         }
 #}
+
+{%- if columns | length == 0 %}
+    {{- return({}) }}
+{%- endif %}
+
 {%- set result = {parent_column: {'columns': [], 'depends_on': depends_on or []}} %}
 {#- Iterate through columns #}
 {%- for column in columns %}
