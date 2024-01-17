@@ -76,3 +76,34 @@ WHERE {{ dbt_assertions.assertions_filter(blacklist=['site_id_is_not_null']) }}
 
 
 ![basic_example_d_site](../../../img/basic_example_downstream_model.png)
+
+### Combine assertions & generic tests
+
+#### Example usage
+
+Suppose we are working with the `d_site` table - you want to use generic tests.
+
+Configure the generic test as:
+
+```yml
+model:
+  name: my_model
+  tests:
+    - assertions(blacklist=["key_1_not_null"])
+  columns:
+    ...
+    assertions:
+      key_1_not_null:
+        description: "key_1 is not null."
+        expression: "key_1 IS NOT NULL"
+
+      key_2_not_null:
+        description: "key_2 is not null."
+        expression: "key_2 IS NOT NULL"
+```
+
+Note: 'assertions()' is the name given to the test in 'tests/generic' - you can change its name if needed.
+
+The blacklist argument will filter all rows containing at least a "key_1_not_null" error.
+
+You can also use the whitelist & from_columns arguments, or use the function without arguments (and thus filtering).

@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: basic_example_d_site
+    tests:
+      - assertions
     columns:
       - name: site_id
       - name: country_trigram
