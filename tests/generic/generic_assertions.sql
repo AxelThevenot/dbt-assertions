@@ -1,10 +1,12 @@
-{% test assertions_test(model, column_name, blacklist=none, whitelist=none, from_column='errors', re_assert=False) %}
+{% test generic_assertions(model, column_name, from_column='errors', whitelist=none, blacklist=none, re_assert=False) %}
+
+{{ config(severity = 'warn') }}
 
 WITH 
     final AS (
         SELECT
             *,
-            {% dbt_assertions.assertions(from_column=from_column) if re_assert else '' %}
+            {{ dbt_assertions.assertions(from_column=from_column) if re_assert else '' }}
         FROM
             {{ model }}
     )

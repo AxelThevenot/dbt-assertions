@@ -83,13 +83,36 @@ WHERE {{ dbt_assertions.assertions_filter(blacklist=['site_id_is_not_null']) }}
 
 Suppose we are working with the `d_site` table - you want to use generic tests.
 
-Configure the generic test as:
+Configure the generic test in schema.yml with:
 
 ```yml
 model:
   name: my_model
   tests:
-    - assertions(blacklist=["key_1_not_null"])
+      - dbt_assertions.generic_assertions:
+          from_column: <column_name>
+          whitelist: [list(str_to_filter)]
+          blacklist: [list(str_to_filter)]
+          re_assert: true | false
+
+  columns:
+    ...
+```
+
+Note: 'generic_assertions()' is the name given to the test in 'tests/generic' - you can change its name if needed.
+
+For instance, the blacklist argument will filter all rows containing at least a "key_1_not_null" error:
+
+```yml
+model:
+  name: my_model
+  tests:
+      - dbt_assertions.generic_assertions:
+          from_column: 
+          whitelist:
+          blacklist: ["key_1_not_null"]
+          re_assert:
+
   columns:
     ...
     assertions:
@@ -101,9 +124,5 @@ model:
         description: "key_2 is not null."
         expression: "key_2 IS NOT NULL"
 ```
-
-Note: 'assertions()' is the name given to the test in 'tests/generic' - you can change its name if needed.
-
-The blacklist argument will filter all rows containing at least a "key_1_not_null" error.
 
 You can also use the whitelist & from_columns arguments, or use the function without arguments (and thus filtering).
