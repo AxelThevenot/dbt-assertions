@@ -36,15 +36,15 @@
           },
           'nested_structure_sub_column_1_not_null': {
             'description': 'nested_structure.sub_column_1 are not null over the row.',
-            'expression': 'NOT EXISTS (SELECT 1 
-                FROM UNNEST(nested_structure) nested_structure 
+            'expression': 'NOT EXISTS (SELECT 1
+                FROM UNNEST(nested_structure) nested_structure
                 WHERE nested_structure IS NOT NULL AND
                 nested_structure.sub_column_1 IS NULL)'
           },
           'nested_structure_sub_column_2_not_null': {
             'description': 'nested_structure.sub_column_2 are not null over the row.',
-            'expression': 'NOT EXISTS (SELECT 1 
-                FROM UNNEST(nested_structure) nested_structure 
+            'expression': 'NOT EXISTS (SELECT 1
+                FROM UNNEST(nested_structure) nested_structure
                 WHERE nested_structure IS NOT NULL AND
                 nested_structure.sub_column_2 IS NULL)'
           }
@@ -98,7 +98,7 @@
 
         {#- WHERE parts #}
         {%- for column in not_null_columns %}
-            
+
             {%- set column_where = [] %}
             {%- do column_where.append('\n    WHERE ' ~ parent_column ~ ' IS NOT NULL') %}
             {%- do column_where.append('\n    AND ' ~ parent_column ~ '.' ~ column ~ ' IS NULL') %}
