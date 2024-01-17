@@ -54,7 +54,6 @@ A generic test `xxx()` to perform dbt tests as usual, testing the package easily
     - [`__unique__` helper](#__unique__-helper)
     - [`__not_null__` helper](#__not_null__-helper)
     - [Custom column name](#custom-column-name)
-  - Working with assertions
 - [Contribution](#contribution)
 - [Acknowledgments](#acknowledgments)
 - [Contact](#contact)
