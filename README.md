@@ -18,7 +18,7 @@
 
 ✅ **Robust Data Quality Checks**
 
-`dbt-assertions`` ensures thorough data quality assessments at the row level, enhancing the reliability of downstream models.
+`dbt-assertions` ensures thorough data quality assessments at the row level, enhancing the reliability of downstream models.
 
 🔍 **Efficient Error Detection**
 
@@ -54,6 +54,7 @@ A generic test `xxx()` to perform dbt tests as usual, testing the package easily
     - [`__unique__` helper](#__unique__-helper)
     - [`__not_null__` helper](#__not_null__-helper)
     - [Custom column name](#custom-column-name)
+  - Working with assertions
 - [Contribution](#contribution)
 - [Acknowledgments](#acknowledgments)
 - [Contact](#contact)
@@ -173,6 +174,7 @@ SELECT
 FROM {{ ref('my_model') }}
 WHERE {{ dbt_assertions.assertions_filter(whitelist=['assertions_id']) }}
 ```
+
 
 ### Tests
 
