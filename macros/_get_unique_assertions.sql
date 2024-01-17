@@ -81,7 +81,7 @@
         {#- QUALIFY parts #}
         {%- do expression.append('\n    QUALIFY 1 < COUNT(1) OVER(\n    PARTITION BY') %}
         {%- for layer_dependence_key in depends_on + [parent_column] %}
-            
+
             {%- set loop_last_layer = loop.last %}
             {%- for unique_column in layered_unique_columns[layer_dependence_key]['columns'] %}
                 {%- do expression.append('\n        ' ~ layer_dependence_key ~ '.' ~ unique_column) %}

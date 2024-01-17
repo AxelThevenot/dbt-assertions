@@ -1,44 +1,46 @@
-<h1 align="center">dbt-assertions</h1>
-
-<p align="center">
-    An image is coming....
-</p>
+![Alt text](./img/dbt-assertions.png)
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
     <img alt="Static Badge" src="https://img.shields.io/badge/dbt-package-orange">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/AxelThevenot/dbt-assertions">
+    <img alt="GitHub (Pre-)Release Date" src="https://img.shields.io/github/release-date-pre/AxelThevenot/dbt-assertions">
 </p>
 
 <p align="center">
-    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/AxelThevenot/dbt-assertions">
-    <img alt="GitHub (Pre-)Release Date" src="https://img.shields.io/github/release-date-pre/AxelThevenot/dbt-assertions">
     <img src="https://img.shields.io/circleci/project/github/badges/shields/master" alt="build status">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/AxelThevenot/dbt-assert">
-    <img src="https://img.shields.io/github/contributors/AxelThevenot/dbt-assertions" />
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/AxelThevenot/dbt-assertions">
+    <img src="https://img.shields.io/github/contributors/AxelThevenot/dbt-assertions" />
 </p>
 
-## About
+## Features
 
-`dbt-assertions` is a crucial extension package designed for dbt users, aiming to enhance data testing capabilities at the row level integrated into the data pipeline. With this package, users can conduct comprehensive data quality assessments, flagging each row based on specific assertions it fails. 
+✅ **Robust Data Quality Checks**
 
-This approach not only elevates data quality for downstream models but also streamlines error management in daily operations, as the tests are smoothly integrated.
+`dbt-assertions`` ensures thorough data quality assessments at the row level, enhancing the reliability of downstream models.
 
-**In short:** efficient row-by-row error detection and resolution.
+🔍 **Efficient Error Detection**
+
+Granular row-by-row error detection identifies and flags specific rows that fail assertions, streamlining the resolution process.
+
+🛠️ **Customizable Assertions & Easy Integration**
+
+Easy-to-use macros `assertions()` and `assertions_filter()` empower users to customize without barriers data quality checks within the model YAML definition, adapting to specific data validation needs.
+
+🚀 **(coming soon) An Easy Shift from your Actual Workflows**
+
+A generic test `xxx()` to perform dbt tests as usual, testing the package easily without compromising your current workflows.
+
 
 ## Content
 
-- [About](#about)
-- [Content](#content)
 - [Features](#features)
+- [Content](#content)
 - [Install](#install)
 - [Dependencies](#dependencies)
 - [Variables](#variables)
 - [Basic Example](#basic-example)
-  - [Create the assertions you want on your table](#create-the-assertions-you-want-on-your-table)
-  - [Generate assertions results during run-time](#generate-assertions-results-during-run-time)
-  - [Easy data quality evaluation](#easy-data-quality-evaluation)
-  - [Filter bad data in your downstream models](#filter-bad-data-in-your-downstream-models)
 - [Documentation](#documentation)
   - [Macros](#macros)
     - [assertions](#assertions)
@@ -55,8 +57,6 @@ This approach not only elevates data quality for downstream models but also stre
 - [Contribution](#contribution)
 - [Acknowledgments](#acknowledgments)
 - [Contact](#contact)
-
-## Features
 
 
 ## Install
@@ -96,83 +96,6 @@ This package do not have variables.
 
 Check the [basic_example](models/examples/basic_example) example.
 
-### Create the assertions you want on your table
-
-The `d_site` table is defined as follows:
-
-```yml
-version: 2
-
-models:
-  - name: basic_example
-    columns:
-      - name: site_id
-      - name: site_trigram
-      - name: open_date
-      - name: errors
-        assertions:
-          site_id_is_not_null:
-            description: 'Site ID is not null.'
-            expression: site_id IS NOT NULL
-
-          site_trigram_format:
-            description: 'Site trigram must contain 3 upper digits'
-            expression: |
-              LENGTH(site_trigram) = 3
-              AND site_trigram = UPPER(site_trigram)
-```
-
-Assertions are set under the `errors` columns (can be changed).
-
-### Generate assertions results during run-time
-
-Once the assertions described, you can call the `dbt_assertions.assertions()` macro as follows.
-
-```sql
-{{ 
-    config(alias='d_site', materialized='table')
-}}
-
-WITH
-    final AS (
-        SELECT 1 AS site_id, 'FRA' AS site_trigram, DATE('2023-01-01') AS open_date
-        UNION ALL
-        SELECT 2 AS site_id, 'France' AS site_trigram, DATE('2023-01-01') AS open_date
-        UNION ALL
-        SELECT NULL AS site_id, 'Belgium' AS site_trigram, DATE('2023-01-01') AS open_date
-    )
-SELECT
-    *,
-    {{ dbt_assertions.assertions() | indent(4) }},
-FROM `final`
-```
-
-Everything works fine ! 🔥🔥🔥
-
-### Easy data quality evaluation
-
-![basic_example_d_site](img/basic_example_d_site.png)
-
-All the failed assertions are saved under the `errors` columns which is an array of string containing failed assertions ID.
-
-### Filter bad data in your downstream models
-
-```sql
-{{ 
-    config(alias='downstream_model', materialized='table')
-}}
-
-SELECT
-    site_id,
-    site_trigram,
-    open_date,
-FROM {{ ref('basic_example_d_site') }}
--- Remove bad data: here only sites without ID.
-WHERE {{ dbt_assertions.assertions_filter(blacklist=['site_id_is_not_null']) }}
-
-```
-![basic_example_downstream_model](img/basic_example_downstream_model.png)
-
 ## Documentation
 
 ### Macros
@@ -184,7 +107,7 @@ WHERE {{ dbt_assertions.assertions_filter(blacklist=['site_id_is_not_null']) }}
 **Arguments:**
 - **from_column (optional[str]):** column to read the assertions from.
 
---- 
+---
 
 This macro parses the schema model YAML to extract row-level assertions; [custom assertions](#custom-assertions), [unique](#__unique__-helper), and [not-null](#__not_null__-helper). It then constructs an array of failed assertions for each row based on its assertions results.
 
@@ -196,7 +119,7 @@ You can call the macro using `from_column` argument to change this default colum
 ```sql
 SELECT
     *,
-    {{ dbt_assertions.assertions(from_column='warnings') }}, 
+    {{ dbt_assertions.assertions(from_column='warnings') }},
 FROM {{ ref('my_model') }}
 ```
 
@@ -214,7 +137,7 @@ WITH
 -- After query results
 SELECT
     *,
-    {{ dbt_assertions.assertions() }}, 
+    {{ dbt_assertions.assertions() }},
 FROM final
 ```
 
@@ -230,7 +153,7 @@ FROM final
         If provided, rows with at least one of these error IDs will be excluded.
 - **reverse (optional[bool]):** returns errorless rows when `reverse=false` and error rows when `reverse=true`.
 
---- 
+---
 
 It will filter the rows without any error by default.
 
@@ -265,7 +188,7 @@ The assertions definition **must** be created **under a column definition of you
 assertions:
   [__unique__: <unique_expression>]
   [__not_null__: __unique__ | <not_null_expression>]
-  
+
   [<custom_assertion_id>:
     description: [<string>]
     expression: <string>
@@ -277,7 +200,7 @@ assertions:
 
 #### Custom assertions
 
-Custom assertions are the basics assertions. 
+Custom assertions are the basics assertions.
 
 > The package is made to support every assertions as long as it is supported in a SELECT statement of your underlying database. **So you can do a lot of things**.
 
@@ -469,7 +392,7 @@ model:
 And in your model query.
 
 ```sql
-WITH final AS 
+WITH final AS
     (
         SELECT ...
     )
