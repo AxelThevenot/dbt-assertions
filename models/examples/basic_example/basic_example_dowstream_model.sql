@@ -1,5 +1,5 @@
 {{
-    config(alias='downstream_model', materialized='table', enable=false)
+    config(alias='downstream_model', materialized='table', enabled=false)
 }}
 
 SELECT
