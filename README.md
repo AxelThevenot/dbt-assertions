@@ -28,9 +28,10 @@ Granular row-by-row error detection identifies and flags specific rows that fail
 
 Easy-to-use macros `assertions()` and `assertions_filter()` empower users to customize without barriers data quality checks within the model YAML definition, adapting to specific data validation needs.
 
-🚀 **(coming soon) An Easy Shift from your Actual Workflows**
+🚀 **An Easy Shift from your Actual Workflows**
 
-A generic test `xxx()` to perform dbt tests as usual, testing the package easily without compromising your current workflows.
+A generic test `generic_assertions()` to perform dbt tests as usual, testing the package easily without compromising your current workflows.
+**you can test the package with this generic test easily without having to rebuild you table**
 
 
 ## Content
@@ -46,7 +47,7 @@ A generic test `xxx()` to perform dbt tests as usual, testing the package easily
     - [assertions](#assertions)
     - [assertions\_filter](#assertions_filter)
   - [Tests](#tests)
-    - [what\_ever\_the\_test\_name](#what_ever_the_test_name)
+    - [generic\_assertions](#generic_assertions)
   - [Model definition](#model-definition)
     - [Yaml general definition](#yaml-general-definition)
     - [Custom assertions](#custom-assertions)
@@ -61,7 +62,7 @@ A generic test `xxx()` to perform dbt tests as usual, testing the package easily
 
 ## Install
 
-`dbt-assertions` currently supports `dbt 1.2.x` or higher.
+`dbt-assertions` currently supports `dbt 1.7.x` or higher.
 
 
 Check [dbt github package](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
@@ -71,15 +72,14 @@ Include in `packages.yml`
 ```yaml
 packages:
   - git: https://github.com/AxelThevenot/dbt-assertions.git
-    revision: 0.1.0a
+    revision: 0.1.1
     # <see https://github.com/AxelThevenot/dbt-assertions/releases/latest> for the latest version tag
 ```
 
 This package supports:
 
 * BigQuery
-* default (not tested on other databases, do not hesitate to contribute! ❤️
-)
+* default (not tested on other databases, do not hesitate to contribute! ❤️)
 
 For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases)
 
@@ -146,7 +146,7 @@ FROM final
 `assertions_filter()` macro generates an expression to filter rows based on errors generated with the [`assertions()`](#assertions) macro.
 
 **Arguments:**
-- **from_column (optional[str])**: column to read the failed assertions from.
+- **from_column (optional[str]):** column to read the failed assertions from.
 - **whitelist (optional[list[str]]):** A list of error IDs to whitelist.
         If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
 - **blacklist (optional[list[str]]):** A list of error IDs to blacklist.
@@ -174,10 +174,60 @@ FROM {{ ref('my_model') }}
 WHERE {{ dbt_assertions.assertions_filter(whitelist=['assertions_id']) }}
 ```
 
-
 ### Tests
 
-####  [what_ever_the_test_name](tests/generic/what_ever_the_test_name.sql)
+####  [generic_assertions](tests/generic/generic_assertions.sql)
+
+Generates a test to get rows based on errors.
+
+It will returns the rows without any error by default.
+You can change this default behaviour specifying a whitelist or blacklist (not both).
+
+You must defined beforehand the assertions for the model. [More on YAML definition for assertions](#yaml-general-definition).
+
+**Arguments:**
+- **from_column (optional[str]):** column to read the failed assertions from.
+- **whitelist (optional[list[str]]):** A list of error IDs to whitelist.
+    If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
+- **blacklist (optional[list[str]]):** A list of error IDs to blacklist.
+    If provided, rows with at least one of these error IDs will be excluded.
+- **re_assert (optional[bool]):** to set to `true` if your assertion field do not exists yet in your table.
+
+Configure the generic test in schema.yml with:
+
+```yml
+model:
+  name: my_model
+  tests:
+    - dbt_assertions.generic_assertions:
+      [from_column: <column_name>]
+      [whitelist: <list(str_to_filter)>]
+      [blacklist: <list(str_to_filter)>]
+      [re_assert: true | false]
+
+  columns:
+    ...
+```
+
+`[]` represents optional parts. Yes everything is optional but let's see it by examples.
+
+In the [basic test example](./models/examples/basic_test_example/) you can easily create your test as follows then run your `dbt test` command.
+
+```yml
+models:
+  - name: basic_test_example_d_site
+    tests:
+      - dbt_assertions.generic_assertions:
+          from_column: errors
+          blacklist:
+            - site_id_is_not_null
+          # `re_assert: true` to use only if your assertion's column
+          # is not computed and saved in your table.
+          re_assert: true
+
+    columns:
+      ...
+```
 
 ### Model definition
 
@@ -406,7 +456,12 @@ FROM {{ ref('my_model') }}
 
 ## Contribution
 
+If you want to contribute, please open a Pull Request or an Issue on this repo.
+Feel free to reach me [Linkedin](https://www.linkedin.com/in/axel-thevenot/).
+
 ## Acknowledgments
+
+Special thank to @vvaneeclo for its help !!
 
 ## Contact
 

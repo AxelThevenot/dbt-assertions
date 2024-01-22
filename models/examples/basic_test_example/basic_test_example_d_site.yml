@@ -1,7 +1,16 @@
 version: 2
 
 models:
-  - name: basic_example_d_site
+  - name: basic_test_example_d_site
+    tests:
+      - dbt_assertions.generic_assertions:
+          from_column: errors
+          blacklist:
+            - site_id_is_not_null
+          # `re_assert: true` to use only if your assertion's column
+          # is not computed and saved in your table.
+          re_assert: true
+
     columns:
       - name: site_id
       - name: country_trigram
