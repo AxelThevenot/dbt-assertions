@@ -1,4 +1,4 @@
-![Alt text](./img/dbt-assertions.png)
+![Alt text](./img/dbt-assertions-logo.png)
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
