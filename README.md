@@ -65,14 +65,14 @@ A generic test `generic_assertions()` to perform dbt tests as usual, testing the
 `dbt-assertions` currently supports `dbt 1.7.x` or higher.
 
 
-Check [dbt github package](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+Check [dbt package hub](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 Include in `packages.yml`
 
 ```yaml
 packages:
-  - git: https://github.com/AxelThevenot/dbt-assertions.git
-    revision: 0.1.1
+  - package: AxelThevenot/dbt_assertions
+    version: [">=0.1.0", "<1.0.0"]
     # <see https://github.com/AxelThevenot/dbt-assertions/releases/latest> for the latest version tag
 ```
 
@@ -81,7 +81,7 @@ This package supports:
 * BigQuery
 * default (not tested on other databases, do not hesitate to contribute! ❤️)
 
-For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases)
+For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases/latest)
 
 
 ## Dependencies
