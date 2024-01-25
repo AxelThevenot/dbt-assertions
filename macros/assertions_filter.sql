@@ -34,19 +34,33 @@
 {%- if exclude_list is not none and exclude_list is not none -%}
     {{
         exceptions.raise_compiler_error(
-            'exclude_list or exclude_list must be provided. Not both. Got (exclude_list: ' ~ exclude_list ~ ', exclude_list: ' ~ exclude_list ~ ')'
+            'exclude_list or exclude_list must be provided. Not both.'
+            ~ 'Got (exclude_list: ' ~ exclude_list 
+            ~ ', exclude_list: ' ~ exclude_list ~ ')'
         )
     }}
 {%- endif -%}
 
-{#- Generate expression based on the presence of exclude_list or exclude_list -#}
+{#- Generate filtering expression  -#}
 {{- '' if reverse else 'NOT ' -}}
 {%- if exclude_list is not none -%}
-EXISTS (SELECT 1 FROM UNNEST({{ from_column }}) assertion_ WHERE assertion_ NOT IN ('{{ exclude_list | join("\', \'")}}'))
+EXISTS (
+    SELECT 1
+    FROM UNNEST({{ from_column }}) assertion_
+    WHERE assertion_ NOT IN ('{{ exclude_list | join("\', \'")}}')
+)
 {%- elif exclude_list is not none -%}
-EXISTS (SELECT 1 FROM UNNEST({{ from_column }}) assertion_ WHERE assertion_ IN ('{{ exclude_list | join("\', \'")}}'))
+EXISTS (
+    SELECT 1
+    FROM UNNEST({{ from_column }}) assertion_
+    WHERE assertion_ IN ('{{ exclude_list | join("\', \'")}}')
+)
 {%- else -%}
-EXISTS (SELECT 1 FROM UNNEST({{ from_column }}) assertion_ WHERE TRUE)
+EXISTS (
+    SELECT 1
+    FROM UNNEST({{ from_column }}) assertion_
+    WHERE TRUE
+)
 {%- endif -%}
 
 {%- endmacro %}

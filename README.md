@@ -18,19 +18,24 @@
 
 ✅ **Robust Data Quality Checks**
 
-`dbt-assertions` ensures thorough data quality assessments at the row level, enhancing the reliability of downstream models.
+`dbt-assertions` ensures thorough data quality assessments at the row level,
+enhancing the reliability of downstream models.
 
 🔍 **Efficient Exception Detection**
 
-Granular row-by-row exception detection identifies and flags specific rows that fails assertions, streamlining the resolution process.
+Granular row-by-row exception detection identifies and
+flags specific rows that fails assertions, streamlining the resolution process.
 
 🛠️ **Customizable Assertions & Easy Integration**
 
-Easy-to-use macros `assertions()` and `assertions_filter()` empower users to customize without barriers data quality checks within the model YAML definition, adapting to specific data validation needs.
+Easy-to-use macros `assertions()` and `assertions_filter()` empower users to
+customize without barriers data quality checks within the model YAML definition,
+adapting to specific data validation needs.
 
 🚀 **An Easy Shift from your Actual Workflows**
 
-A generic test `generic_assertions()` to perform dbt tests as usual, testing the package easily without compromising your current workflows.
+A generic test `generic_assertions()` to perform dbt tests as usual,
+testing the package easily without compromising your current workflows.
 **you can test the package with this generic test easily without having to rebuild you table**
 
 
@@ -65,7 +70,10 @@ A generic test `generic_assertions()` to perform dbt tests as usual, testing the
 `dbt-assertions` currently supports `dbt 1.7.x` or higher.
 
 
-Check [dbt package hub](https://hub.getdbt.com/calogica/dbt_expectations/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+Check [dbt package hub](https://hub.getdbt.com/calogica/dbt_expectations/latest/)
+for the latest installation instructions,
+or [read the docs](https://docs.getdbt.com/docs/package-management)
+for more information on installing packages.
 
 Include in `packages.yml`
 
@@ -109,10 +117,16 @@ Check the [basic_example](models/examples/basic_example) example.
 
 ---
 
-This macro parses the schema model YAML to extract row-level assertions; [custom assertions](#custom-assertions), [unique](#__unique__-helper), and [not-null](#__not_null__-helper). It then constructs an array of exceptions for each row based on its assertions results.
+This macro parses the schema model YAML to extract row-level assertions;
+[custom assertions](#custom-assertions),
+[unique](#__unique__-helper),
+and [not-null](#__not_null__-helper).
+It then constructs an array of exceptions for each row based on its assertions results.
 
 
-By default, it will generate assertions based on your [YAML model definition](#model-definition) reading configuration for a column named `exceptions`.
+By default, it will generate assertions based on
+your [YAML model definition](#model-definition)
+reading configuration for a column named `exceptions`.
 
 You can call the macro using `from_column` argument to change this default column.
 
@@ -123,7 +137,8 @@ SELECT
 FROM {{ ref('my_model') }}
 ```
 
-**Note:** this macro is made to generate assertions based of the result of the table. It means it must be generated at the end of the query.
+**Note:** this macro is made to generate assertions based on you query result.
+It means it must be generated at the end of the query.
 
 ```sql
 WITH
@@ -143,13 +158,15 @@ FROM final
 
 #### [assertions_filter](macros/assertions_filter.sql)
 
-`assertions_filter()` macro generates an expression to filter rows based on assertions results, generated with the [`assertions()`](#assertions) macro.
+`assertions_filter()` macro generates an expression to filter rows based on
+assertions results, generated with the [`assertions()`](#assertions) macro.
 
 **Arguments:**
 - **from_column (optional[str]):** Column to read the exceptions from.
 - **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
 - **include_list (optional[list[str]]):** Assertions to include in the filter.
-- **reverse (optional[bool]):** returns rows without exception when `reverse=false`, and rows with exceptions when `reverse=true`.
+- **reverse (optional[bool]):** returns rows without exception when `reverse=false`,
+  and rows with exceptions when `reverse=true`.
 
 ---
 
@@ -163,7 +180,8 @@ FROM {{ ref('my_model') }}
 WHERE {{ dbt_assertions.assertions_filter() }}
 ```
 
-You can change this default behaviour specifying an optional `exclude_list` or `include_list` argument (not both).
+You can change this default behaviour specifying an
+optional `exclude_list` or `include_list` argument (not both).
 
 ```sql
 SELECT
@@ -187,7 +205,8 @@ You must defined beforehand the assertions for the model. [More on YAML definiti
 - **from_column (optional[str]):** Column to read the exceptions from.
 - **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
 - **include_list (optional[list[str]]):** Assertions to include in the filter.
-- **re_assert (optional[bool]):** to set to `true` if your assertion field do not exists yet in your table.
+- **re_assert (optional[bool]):** to set to `true` if your assertion field
+  is not calculated in your table.
 
 Configure the generic test in schema.yml with:
 
@@ -207,7 +226,8 @@ model:
 
 `[]` represents optional parts. Yes everything is optional but let's see it by examples.
 
-In the [basic test example](./models/examples/basic_test_example/) you can easily create your test as follows then run your `dbt test` command.
+In the [basic test example](./models/examples/basic_test_example/)
+you can easily create your test as follows then run your `dbt test` command.
 
 ```yml
 models:
@@ -229,7 +249,8 @@ models:
 
 #### Yaml general definition
 
-The assertions definition **must** be created **under a column definition of your model** and respects the following.
+The assertions definition **must** be created
+**under a column definition of your model** and respects the following.
 
 ```yml
 assertions:
@@ -243,17 +264,22 @@ assertions:
   ...
 ```
 
-`[]` represents optional parts. Yes everything is optional but let's see it by examples.
+`[]` represents optional parts.
+Yes, everything is optional but let's see it by examples.
 
 #### Custom assertions
 
 Custom assertions are the basics assertions.
 
-> The package is made to support every assertions as long as it is supported in a SELECT statement of your underlying database. **So you can do a lot of things**.
+> The package is made to support every assertions as long as
+> it is supported in a SELECT statement of your underlying database.
+> **So you can do a lot of things**.
 
 It is represented as key values. Keys are the ID of the assertions.
 
-Each assertions is defined by at least an `expression` which will be rendered to be evaulated as your test.
+Each assertions is defined by at least an `expression` which will be rendered
+to be evaulated as your test.
+
 `description` and [`null_as_exception`](#null_as_exception) are optional.
 
 ```yml
@@ -282,7 +308,8 @@ assertions:
 `null_as_exception` is an optional configuration for your assertion.
 Default to `false` it is the return result if your expression is evaluated to `NULL`.
 
-Default behaviour is set to `false` because one assertion must evaluate on thing. Prefer using the [`__not_null_`](#__not_null__-helper) helper instead.
+Default behaviour is set to `false` because one assertion must evaluate on thing.
+Prefer using the [`__not_null_`](#__not_null__-helper) helper instead.
 
 In our previous, if we want to also avoid `NULL` site types.
 
@@ -304,7 +331,8 @@ assertions:
 
 #### `__unique__` helper
 
-As guaranteeing uniqueness of rows is a concern in most of the use cases, the `__unique__` helper is here to avoid writing complex and repetitive queries.
+As guaranteeing uniqueness of rows is a concern in most of the use cases,
+the `__unique__` helper is here to avoid writing complex and repetitive queries.
 
 ---
 
@@ -351,7 +379,8 @@ assertions:
 
 #### `__not_null__` helper
 
-As guaranteeing not null values is also concern in most of the use cases, the `__not_null__` helper is here to avoid writing complex and repetitive queries.
+As guaranteeing not null values is also concern in most of the use cases,
+the `__not_null__` helper is here to avoid writing complex and repetitive queries.
 
 ---
 
@@ -379,7 +408,8 @@ assertions:
     - key_2
 ```
 
-And as the two helpers are often linked, you can rewrite the assertions as follows, which is also the same.
+And as the two helpers are often linked,
+you can rewrite the assertions as follows, which is also the same.
 
 ```yml
 assertions:
@@ -394,7 +424,8 @@ assertions:
 
 You can also verify unique keys for nested/repeated structure. It will generate:
 - One assertion **for each column** of the 0-depth guaranteeing not null.
-- One assertion **for each column** under the repeated field guaranteeing **all the values are not null within the row**.
+- One assertion **for each column** under the repeated field guaranteeing
+  **all the values are not null within the row**.
 
 The following example will generate the assertions:
 - `key_1_not_null`: key_1 is not null.
@@ -412,7 +443,9 @@ assertions:
 
 #### Custom column name
 
-If `exceptions` column is not a naming convention you like, you can still opt for a column name you choose and the macro will still work with the `from_colum` argument.
+If `exceptions` column is not a naming convention you like,
+you can still opt for a column name you choose and the macro will
+still work with the `from_colum` argument.
 
 You can also play with multiple columns.
 
@@ -461,7 +494,8 @@ Special thank to @vvaneeclo for its help !!
 
 ## Contact
 
-If you have any question, please open a new Issue or feel free to reach out to [Linkedin](https://www.linkedin.com/in/axel-thevenot/)
+If you have any question, please open a new Issue or
+feel free to reach out to [Linkedin](https://www.linkedin.com/in/axel-thevenot/)
 
 ---
 

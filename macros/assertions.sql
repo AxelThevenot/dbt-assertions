@@ -1,10 +1,10 @@
 {%- macro assertions(from_column='exceptions', _node=none) %}
 {#-
-    Generates row-level assertions based on the schema model YAML for data quality tracking.
+    Generates row-level assertions based on the schema model YAML.
 
     This macro parses the schema model YAML to extract row-level assertions,
-    including unique and not-null constraints. It then constructs an array of failed assertions (exceptions)
-    for each row based on its assertions results.
+    including unique and not-null constraints. It then constructs an array of
+    failed assertions (exceptions) for each row based on its assertions results.
 
     Args:
         from_column (optional[str]): Column to read the exceptions from.
@@ -12,10 +12,11 @@
             This argument is reserved to `dbt-assertions`'s developers.
 
     Returns:
-        str: An ARRAY<STRING> SELECT expression containing assertion ID for rows that violate assertions.
+        str: An ARRAY<STRING> SELECT expression exceptions from assertions.
 
     Example Usage:
-        Suppose the schema model YAML is set as below, you can call the function in you model the following:
+        Suppose the schema model YAML is set as below,
+        you can call the function in you model the following:
 
         ```
         WITH
@@ -64,14 +65,6 @@
         The macro will generate an expression to check these assertions and return
         an array of assertion IDs for each row where the assertions are violated.
 
-    Notes:
-        - `expression` is correct as long as it can correct as a SELECT expression (including joins and analytic functions).
-        - `__unique_key__` assertion is an helper to create dynamically the assertion on uniqueness over the row.
-        - `__not_null__` assertion is an helper to create dynamically the assertion on required fields over the row. It will generate one assertion for each field.
-        - `__not_null__` can be equal to __unique_key__ to avoid repetitions.
-        - `__unique_key__` and `__not_null__` assertions will raise an exeception if at least one of the sub fields do not respect the constraint.
-        - `null_as_exception` (default to false) the result rule if the expression is evaluated to NULL.
-        - The resulting array is named with `from_column` and can be used in subsequent transformations.
 #}
     {{- adapter.dispatch('assertions', 'dbt_assertions') (from_column, _node) }}
 {%- endmacro %}
@@ -80,10 +73,10 @@
 {%- macro default__assertions(from_column, _node) %}
 
 {#- Parses the assertions if exists. #}
-{%- set model             = model if _node is none else _node %}
-{%- set columns           = model.columns if ('columns' in model) else {} %}
+{%- set model = model if _node is none else _node %}
+{%- set columns = model.columns if ('columns' in model) else {} %}
 {%- set assertions_column = columns[from_column] if (from_column in columns) else {} %}
-{%- set assertions        = assertions_column.assertions if ('assertions' in assertions_column) else {} %}
+{%- set assertions = assertions_column.assertions if ('assertions' in assertions_column) else {} %}
 
 {#- Generate assertions from helpers. #}
 {%- set __unique__ = {} %}

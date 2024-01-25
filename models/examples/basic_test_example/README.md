@@ -4,7 +4,8 @@
 
 Suppose we are working with the `d_site` table - you want to use generic tests.
 
-For instance, the `include_list` argument will filter all rows containing at least a "site_id_is_not_null" error:
+For instance, the `include_list` argument will filter all rows
+containing at least a "site_id_is_not_null" exception:
 
 ```yml
 version: 2
@@ -13,7 +14,7 @@ models:
   - name: basic_test_example_d_site
     tests:
       - dbt_assertions.generic_assertions:
-          from_column: errors
+          from_column: exceptions
           include_list:
             - site_id_is_not_null
           # `re_assert: true` to use only if your assertion's column
@@ -24,7 +25,7 @@ models:
       - name: site_id
       - name: country_trigram
       - name: open_date
-      - name: errors
+      - name: exceptions
         assertions:
           site_id_is_not_null:
             description: 'Site ID is not null.'
@@ -37,4 +38,6 @@ models:
               AND site_trigram = UPPER(site_trigram)
 ```
 
-You can also use the `exclude_list` and `from_columns` arguments, or use the function without arguments (and thus filtering each row based on every assertion).
+You can also use the `exclude_list` and `from_columns` arguments,
+or use the function without arguments
+(and thus filtering each row based on every assertion).

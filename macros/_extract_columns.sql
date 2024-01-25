@@ -3,11 +3,12 @@
     Extracts a flattened representation of columns hierarchy.
 
     Args:
-        columns (list): A list of column names or dictionaries representing nested structures.
-        depends_on (optional[list]): A list representing the dependencies of the current columns.
+        columns (list): Column names or dict of nested structures.
+        depends_on (optional[list]): Dependencies of the current columns.
 
     Returns:
-        dict: A dictionary with keys representing the columns and values as dictionaries containing columns and their dependencies.
+        dict: A dictionary with keys representing the columns and values
+            as dictionaries containing columns and their dependencies.
 
     Example:
         columns = [
@@ -29,11 +30,26 @@
 
         _extract_columns(columns) returns:
         {
-            none:             {'columns': ['key_01', 'key_02'],         'depends_on': []},
-            'nested_field_1': {'columns': ['sub_key_11', 'sub_key_12'], 'depends_on': []},
-            'nested_field_2': {'columns': ['sub_key_21'],               'depends_on': ['nested_field_1']},
-            'nested_field_3': {'columns': ['sub_key_31', 'sub_key_32'], 'depends_on': ['nested_field_1', 'nested_field_2']},
-            'nested_field_4': {'columns': ['sub_key_41', 'sub_key_42'], 'depends_on': []}
+            none: {
+                'columns': ['key_01', 'key_02'],
+                'depends_on': []
+            },
+            'nested_field_1': {
+                'columns': ['sub_key_11', 'sub_key_12'],
+                'depends_on': []
+            },
+            'nested_field_2': {
+                'columns': ['sub_key_21'],
+                'depends_on': ['nested_field_1']
+            },
+            'nested_field_3': {
+                'columns': ['sub_key_31', 'sub_key_32'],
+                'depends_on': ['nested_field_1', 'nested_field_2']
+            },
+            'nested_field_4': {
+                'columns': ['sub_key_41', 'sub_key_42'],
+                'depends_on': []
+            }
         }
 #}
 
