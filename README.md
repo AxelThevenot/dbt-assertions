@@ -361,8 +361,8 @@ You can also verify unique keys for nested/repeated structure. It will generate:
 
 The following example will generate the assertions:
 - `unique`: Row must be unique over the unique keys.
-- `nested_1_unique`: Items must be unique **within** nested_1 in the row.
-- `nested_1.nested_2_unique`: Items must be unique **within** nested_1.nested_2 in the row.
+- `nested_1__unique`: Items must be unique **within** nested_1 in the row.
+- `nested_1.nested_2__unique`: Items must be unique **within** nested_1.nested_2 in the row.
 
 ```yml
 assertions:
@@ -386,11 +386,11 @@ the `__not_null__` helper is here to avoid writing complex and repetitive querie
 
 ```yml
 assertions:
-  key_1_not_null:
+  key_1__not_null:
     description: "key_1 is not null."
     expression: "key_1 IS NOT NULL"
 
-  key_2_not_null:
+  key_2__not_null:
     description: "key_2 is not null."
     expression: "key_2 IS NOT NULL"
 ```
@@ -428,9 +428,9 @@ You can also verify unique keys for nested/repeated structure. It will generate:
   **all the values are not null within the row**.
 
 The following example will generate the assertions:
-- `key_1_not_null`: key_1 is not null.
-- `key_2_not_null`: key_2 is not null.
-- `nested_1.key_3_not_null`: nested_1.key_3 **are** not null.
+- `key_1__not_null`: key_1 is not null.
+- `key_2__not_null`: key_2 is not null.
+- `nested_1.key_3__not_null`: nested_1.key_3 **are** not null.
 
 ```yml
 assertions:

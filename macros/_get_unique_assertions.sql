@@ -26,7 +26,7 @@
             'description': 'Row must be unique over the unique keys.',
             'expression': '1 = COUNT(1) OVER(PARTITION BY column_a, column_b)'
           },
-          'nested_structure_unique': {
+          'nested_structure__unique': {
             'description': 'Items must be unique within nested_structure in the row.',
             'expression': 'NOT EXISTS (
                 SELECT 1
@@ -110,7 +110,7 @@
         {%- do expression.append('))') %}
 
         {%- do result.update({
-                '.'.join(depends_on + [parent_column]) ~'_unique': {
+                '.'.join(depends_on + [parent_column]) ~'__unique': {
                     'description': 'Items must be unique within'
                         ~ '.'.join(parents_columns) ~ ' in the row.',
                     'expression': ''.join(expression),
