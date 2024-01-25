@@ -1,4 +1,4 @@
-![Alt text](./img/dbt-assertions-logo.png)
+![dbt-assertions-logo.png](./img/dbt-assertions-logo.png)
 
 <p align="center">
     <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-ff69b4?style=plastic"/>
@@ -20,9 +20,9 @@
 
 `dbt-assertions` ensures thorough data quality assessments at the row level, enhancing the reliability of downstream models.
 
-🔍 **Efficient Error Detection**
+🔍 **Efficient Exception Detection**
 
-Granular row-by-row error detection identifies and flags specific rows that fail assertions, streamlining the resolution process.
+Granular row-by-row exception detection identifies and flags specific rows that fails assertions, streamlining the resolution process.
 
 🛠️ **Customizable Assertions & Easy Integration**
 
@@ -51,7 +51,7 @@ A generic test `generic_assertions()` to perform dbt tests as usual, testing the
   - [Model definition](#model-definition)
     - [Yaml general definition](#yaml-general-definition)
     - [Custom assertions](#custom-assertions)
-    - [`null_as_error`](#null_as_error)
+    - [`null_as_exception`](#null_as_exception)
     - [`__unique__` helper](#__unique__-helper)
     - [`__not_null__` helper](#__not_null__-helper)
     - [Custom column name](#custom-column-name)
@@ -72,7 +72,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: AxelThevenot/dbt_assertions
-    version: [">=0.1.0", "<1.0.0"]
+    version: [">=1.0.0", "<2.0.0"]
     # <see https://github.com/AxelThevenot/dbt-assertions/releases/latest> for the latest version tag
 ```
 
@@ -109,10 +109,10 @@ Check the [basic_example](models/examples/basic_example) example.
 
 ---
 
-This macro parses the schema model YAML to extract row-level assertions; [custom assertions](#custom-assertions), [unique](#__unique__-helper), and [not-null](#__not_null__-helper). It then constructs an array of failed assertions for each row based on its assertions results.
+This macro parses the schema model YAML to extract row-level assertions; [custom assertions](#custom-assertions), [unique](#__unique__-helper), and [not-null](#__not_null__-helper). It then constructs an array of exceptions for each row based on its assertions results.
 
 
-By default, it will generate assertions based on your [YAML model definition](#model-definition) reading configuration for a column named `errors`.
+By default, it will generate assertions based on your [YAML model definition](#model-definition) reading configuration for a column named `exceptions`.
 
 You can call the macro using `from_column` argument to change this default column.
 
@@ -143,19 +143,17 @@ FROM final
 
 #### [assertions_filter](macros/assertions_filter.sql)
 
-`assertions_filter()` macro generates an expression to filter rows based on errors generated with the [`assertions()`](#assertions) macro.
+`assertions_filter()` macro generates an expression to filter rows based on assertions results, generated with the [`assertions()`](#assertions) macro.
 
 **Arguments:**
-- **from_column (optional[str]):** column to read the failed assertions from.
-- **whitelist (optional[list[str]]):** A list of error IDs to whitelist.
-        If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
-- **blacklist (optional[list[str]]):** A list of error IDs to blacklist.
-        If provided, rows with at least one of these error IDs will be excluded.
-- **reverse (optional[bool]):** returns errorless rows when `reverse=false` and error rows when `reverse=true`.
+- **from_column (optional[str]):** Column to read the exceptions from.
+- **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
+- **include_list (optional[list[str]]):** Assertions to include in the filter.
+- **reverse (optional[bool]):** returns rows without exception when `reverse=false`, and rows with exceptions when `reverse=true`.
 
 ---
 
-It will filter the rows without any error by default.
+By default, each row with exception(s) will be filtered.
 
 
 ```sql
@@ -165,32 +163,30 @@ FROM {{ ref('my_model') }}
 WHERE {{ dbt_assertions.assertions_filter() }}
 ```
 
-You can change this default behaviour specifying an optional `whitelist` or `blacklist` argument (not both).
+You can change this default behaviour specifying an optional `exclude_list` or `include_list` argument (not both).
 
 ```sql
 SELECT
     *
 FROM {{ ref('my_model') }}
-WHERE {{ dbt_assertions.assertions_filter(whitelist=['assertions_id']) }}
+WHERE {{ dbt_assertions.assertions_filter(exclude_list=['assertions_id']) }}
 ```
 
 ### Tests
 
 ####  [generic_assertions](tests/generic/generic_assertions.sql)
 
-Generates a test to get rows based on errors.
+Generates a test to get rows based on exceptionss.
 
-It will returns the rows without any error by default.
-You can change this default behaviour specifying a whitelist or blacklist (not both).
+It will returns the rows without any exception by default.
+You can change this default behaviour specifying a exclude_list or include_list (not both).
 
 You must defined beforehand the assertions for the model. [More on YAML definition for assertions](#yaml-general-definition).
 
 **Arguments:**
-- **from_column (optional[str]):** column to read the failed assertions from.
-- **whitelist (optional[list[str]]):** A list of error IDs to whitelist.
-    If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
-- **blacklist (optional[list[str]]):** A list of error IDs to blacklist.
-    If provided, rows with at least one of these error IDs will be excluded.
+- **from_column (optional[str]):** Column to read the exceptions from.
+- **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
+- **include_list (optional[list[str]]):** Assertions to include in the filter.
 - **re_assert (optional[bool]):** to set to `true` if your assertion field do not exists yet in your table.
 
 Configure the generic test in schema.yml with:
@@ -201,8 +197,8 @@ model:
   tests:
     - dbt_assertions.generic_assertions:
       [from_column: <column_name>]
-      [whitelist: <list(str_to_filter)>]
-      [blacklist: <list(str_to_filter)>]
+      [exclude_list: <list(str_to_filter)>]
+      [include_list: <list(str_to_filter)>]
       [re_assert: true | false]
 
   columns:
@@ -218,8 +214,8 @@ models:
   - name: basic_test_example_d_site
     tests:
       - dbt_assertions.generic_assertions:
-          from_column: errors
-          blacklist:
+          from_column: exceptions
+          include_list:
             - site_id_is_not_null
           # `re_assert: true` to use only if your assertion's column
           # is not computed and saved in your table.
@@ -243,7 +239,7 @@ assertions:
   [<custom_assertion_id>:
     description: [<string>]
     expression: <string>
-    null_as_error: [<bool>]]
+    null_as_exception: [<bool>]]
   ...
 ```
 
@@ -258,7 +254,7 @@ Custom assertions are the basics assertions.
 It is represented as key values. Keys are the ID of the assertions.
 
 Each assertions is defined by at least an `expression` which will be rendered to be evaulated as your test.
-`description` and [`null_as_error`](#null_as_error) are optional.
+`description` and [`null_as_exception`](#null_as_exception) are optional.
 
 ```yml
 assertions:
@@ -281,9 +277,9 @@ assertions:
         )
 ```
 
-#### `null_as_error`
+#### `null_as_exception`
 
-`null_as_error` is an optional configuration for your assertion.
+`null_as_exception` is an optional configuration for your assertion.
 Default to `false` it is the return result if your expression is evaluated to `NULL`.
 
 Default behaviour is set to `false` because one assertion must evaluate on thing. Prefer using the [`__not_null_`](#__not_null__-helper) helper instead.
@@ -303,7 +299,7 @@ assertions:
             'drive',
             'pickup'
         )
-    null_as_error: true
+    null_as_exception: true
 ```
 
 #### `__unique__` helper
@@ -416,7 +412,7 @@ assertions:
 
 #### Custom column name
 
-If `errors` column is not a naming convention you like, you can still opt for a column name you choose and the macro will still work with the `from_colum` argument.
+If `exceptions` column is not a naming convention you like, you can still opt for a column name you choose and the macro will still work with the `from_colum` argument.
 
 You can also play with multiple columns.
 
@@ -449,7 +445,7 @@ WITH final AS
     )
 SELECT
     *,
-    {{ dbt_assertions.assertions() }},
+    {{ dbt_assertions.assertions(from_column='errors') }},
     {{ dbt_assertions.assertions(from_column='warns') }},
 FROM {{ ref('my_model') }}
 ```

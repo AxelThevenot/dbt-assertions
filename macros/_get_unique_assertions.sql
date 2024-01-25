@@ -1,6 +1,6 @@
 {%- macro _get_unique_assertions(unique_columns) -%}
 {#-
-    Generates unique assertions based on the specified unique columns for error tracking.
+    Generates unique assertions based on the specified unique columns for exception tracking.
 
     Args:
         unique_columns (list[str|dict]): A list of column names or a nested structure containing columns

@@ -1,18 +1,18 @@
-{%- macro assertions(from_column='errors', _node=none) %}
+{%- macro assertions(from_column='exceptions', _node=none) %}
 {#-
-    Generates row-level assertions based on the schema model YAML for error tracking.
+    Generates row-level assertions based on the schema model YAML for data quality tracking.
 
     This macro parses the schema model YAML to extract row-level assertions,
-    including unique and not-null constraints. It then constructs an array of failed assertions (errors)
+    including unique and not-null constraints. It then constructs an array of failed assertions (exceptions)
     for each row based on its assertions results.
 
     Args:
-        from_column (optional[str]): column to read the assertions from.
+        from_column (optional[str]): Column to read the exceptions from.
         _node (dict): any other node to read the columns from.
             This argument is reserved to `dbt-assertions`'s developers.
 
     Returns:
-        str: An ARRAY<STRING> SELECT expression containing error ID for rows that violate assertions.
+        str: An ARRAY<STRING> SELECT expression containing assertion ID for rows that violate assertions.
 
     Example Usage:
         Suppose the schema model YAML is set as below, you can call the function in you model the following:
@@ -35,8 +35,8 @@
         Suppose the schema model YAML includes the following assertions:
 
         ```
-            - name: errors
-              description: This column contains errors of the row based on assertions.
+            - name: exceptions
+              description: This column contains exceptions of the row based on assertions.
               assertions:
                 __unique__:
                   - my_key
@@ -58,19 +58,19 @@
                             site_key
                         FROM {{ '{{' ref('my_sites_model') '}}' }}
                     )
-                  null_as_error: true
+                  null_as_exception: true
         ```
 
         The macro will generate an expression to check these assertions and return
-        an array of error IDs for each row where the assertions are violated.
+        an array of assertion IDs for each row where the assertions are violated.
 
     Notes:
         - `expression` is correct as long as it can correct as a SELECT expression (including joins and analytic functions).
         - `__unique_key__` assertion is an helper to create dynamically the assertion on uniqueness over the row.
         - `__not_null__` assertion is an helper to create dynamically the assertion on required fields over the row. It will generate one assertion for each field.
         - `__not_null__` can be equal to __unique_key__ to avoid repetitions.
-        - `__unique_key__` and `__not_null__` assertions will trigger an error if at least one of the sub fields do not respect the constraint.
-        - `null_as_error` (default to false) the trigger error rule if the expression is evaluated to NULL.
+        - `__unique_key__` and `__not_null__` assertions will raise an exeception if at least one of the sub fields do not respect the constraint.
+        - `null_as_exception` (default to false) the result rule if the expression is evaluated to NULL.
         - The resulting array is named with `from_column` and can be used in subsequent transformations.
 #}
     {{- adapter.dispatch('assertions', 'dbt_assertions') (from_column, _node) }}
