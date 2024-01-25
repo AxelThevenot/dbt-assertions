@@ -6,7 +6,7 @@ models:
       - name: site_id
       - name: country_trigram
       - name: open_date
-      - name: errors
+      - name: exceptions
         assertions:
           site_id_is_not_null:
             description: 'Site ID is not null.'

@@ -1,20 +1,18 @@
-{% test generic_assertions(model, from_column='errors', whitelist=none, blacklist=none, re_assert=False) %}
+{% test generic_assertions(model, from_column='exceptions', exclude_list=none, include_list=none, re_assert=False) %}
 {#-
-    Generates a test SELECT expression to get rows based on errors.
+    Generates a test SELECT expression to get rows based on exceptions.
 
-    It will returns the rows without any error by default.
-    You can change this default behaviour specifying a whitelist or blacklist (not both).
+    By default, each row with exception(s) will be returned.
+    You can change this behaviour specifying an exclude_list or include_list (not both).
 
     Args:
-        from_column (optional[str]): column to read the failed assertions from.
-        whitelist (optional[list[str]]): A list of error IDs to whitelist.
-            If provided, only rows with with no error, ignoring whitelist error IDs, will be included.
-        blacklist (optional[list[str]]): A list of error IDs to blacklist.
-            If provided, rows with at least one of these error IDs will be excluded.
+        from_column (optional[str]): Column to read the assertions from.
+        exclude_list (optional[list[str]]): Assertions to exclude in the filter.
+        include_list (optional[list[str]]): Assertions to include in the filter.
         re_assert (optional[bool]): to set to `true` if your assertion field do not exists yet in your table.
 
     Returns:
-        str: An SELECT expression to return rows with errors.
+        str: An SELECT expression to return rows with exceptions.
 -#}
 
 WITH
@@ -47,6 +45,6 @@ WITH
 SELECT
     *
 FROM `final`
-WHERE {{ dbt_assertions.assertions_filter(reverse=true, blacklist=blacklist, whitelist=whitelist, from_column=from_column) }}
+WHERE {{ dbt_assertions.assertions_filter(from_column, exclude_list, include_list, reverse=true) }}
 
 {% endtest %}

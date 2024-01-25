@@ -1,6 +1,6 @@
 {%- macro _get_not_null_assertions(not_null_columns) -%}
 {#-
-    Generates not-null assertions based on the specified columns for error tracking.
+    Generates not-null assertions based on the specified columns for exception tracking.
 
     This macro dynamically creates not-null assertions for the given columns or nested structures.
     It is designed to be used in conjunction with the `assertions_expression` macro for constructing

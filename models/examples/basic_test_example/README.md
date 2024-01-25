@@ -4,7 +4,7 @@
 
 Suppose we are working with the `d_site` table - you want to use generic tests.
 
-For instance, the blacklist argument will filter all rows containing at least a "key_1_not_null" error:
+For instance, the `include_list` argument will filter all rows containing at least a "site_id_is_not_null" error:
 
 ```yml
 version: 2
@@ -14,7 +14,7 @@ models:
     tests:
       - dbt_assertions.generic_assertions:
           from_column: errors
-          blacklist:
+          include_list:
             - site_id_is_not_null
           # `re_assert: true` to use only if your assertion's column
           # is not computed and saved in your table.
@@ -37,4 +37,4 @@ models:
               AND site_trigram = UPPER(site_trigram)
 ```
 
-You can also use the `whitelist` and `from_columns`` arguments, or use the function without arguments (and thus filtering each row based on every assertion).
+You can also use the `exclude_list` and `from_columns` arguments, or use the function without arguments (and thus filtering each row based on every assertion).

@@ -12,7 +12,7 @@ models:
       - name: site_id
       - name: site_trigram
       - name: open_date
-      - name: errors
+      - name: exceptions
         assertions:
           site_id_is_not_null:
             description: 'Site ID is not null.'
@@ -25,7 +25,7 @@ models:
               AND site_trigram = UPPER(site_trigram)
 ```
 
-Assertions are set under the `errors` columns (can be changed).
+Assertions are set under the `exceptions` columns (can be changed).
 
 ### Generate assertions results during run-time
 
@@ -56,7 +56,7 @@ Everything works fine ! 🔥🔥🔥
 
 ![basic_example_d_site](../../../img/basic_example_d_site.png)
 
-All the failed assertions are saved under the `errors` columns which is an array of string containing failed assertions ID.
+All the failed assertions are saved under the `exceptions` columns which is an array of string containing failed assertions ID.
 
 ### Filter bad data in your downstream models
 
@@ -71,7 +71,7 @@ SELECT
     open_date,
 FROM {{ ref('basic_example_d_site') }}
 -- Remove bad data: here only sites without ID.
-WHERE {{ dbt_assertions.assertions_filter(blacklist=['site_id_is_not_null']) }}
+WHERE {{ dbt_assertions.assertions_filter(include_list=['site_id_is_not_null']) }}
 ```
 
 
