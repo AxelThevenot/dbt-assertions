@@ -25,22 +25,22 @@
         Calling the macro with these columns will generate the following:
 
         {
-          'column_a_not_null': {
+          'column_a__not_null': {
             'description': 'column_a is not null.',
             'expression': 'column_a IS NOT NULL'
           },
-          'column_b_not_null': {
+          'column_b__not_null': {
             'description': 'column_b is not null.',
             'expression': 'column_b IS NOT NULL'
           },
-          'nested_structure_sub_column_1_not_null': {
+          'nested_structure_sub_column_1__not_null': {
             'description': 'nested_structure.sub_column_1 are not null over the row.',
             'expression': 'NOT EXISTS (SELECT 1
                 FROM UNNEST(nested_structure) nested_structure
                 WHERE nested_structure IS NOT NULL AND
                 nested_structure.sub_column_1 IS NULL)'
           },
-          'nested_structure_sub_column_2_not_null': {
+          'nested_structure_sub_column_2__not_null': {
             'description': 'nested_structure.sub_column_2 are not null over the row.',
             'expression': 'NOT EXISTS (SELECT 1
                 FROM UNNEST(nested_structure) nested_structure
@@ -69,7 +69,7 @@
 
         {%- for column in not_null_columns %}
             {%- do result.update({
-                    column ~ '_not_null': {
+                    column ~ '__not_null': {
                         'description': column ~ ' is not null.',
                         'expression': column ~ ' IS NOT NULL'
                     }
@@ -110,7 +110,7 @@
             %}
 
             {%- do result.update({
-                '.'.join(depends_on + [parent_column, column]) ~'_not_null': {
+                '.'.join(depends_on + [parent_column, column]) ~'__not_null': {
                         'description': '.'.join(
                                 depends_on + [parent_column, column]
                             ) ~ ' are not null within the row.',
