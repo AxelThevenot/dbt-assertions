@@ -38,11 +38,20 @@ Once the assertions described, you can call the `dbt_assertions.assertions()` ma
 
 WITH
     final AS (
-        SELECT 1 AS site_id, 'FRA' AS site_trigram, DATE('2023-01-01') AS open_date
+        SELECT
+          1 AS site_id,
+          'FRA' AS site_trigram,
+          DATE('2023-01-01') AS open_date
         UNION ALL
-        SELECT 2 AS site_id, 'France' AS site_trigram, DATE('2023-01-01') AS open_date
+        SELECT
+          2 AS site_id,
+          'France' AS site_trigram,
+          DATE('2023-01-01') AS open_date
         UNION ALL
-        SELECT NULL AS site_id, 'Belgium' AS site_trigram, DATE('2023-01-01') AS open_date
+        SELECT
+          NULL AS site_id,
+          'Belgium' AS site_trigram,
+          DATE('2023-01-01') AS open_date
     )
 SELECT
     *,
@@ -56,7 +65,8 @@ Everything works fine ! 🔥🔥🔥
 
 ![basic_example_d_site](../../../img/basic_example_d_site.png)
 
-All the failed assertions are saved under the `exceptions` columns which is an array of string containing failed assertions ID.
+All the "failed" assertions are saved under the `exceptions` column which
+is an array of string containing exceptions for assertions ID.
 
 ### Filter bad data in your downstream models
 

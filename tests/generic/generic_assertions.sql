@@ -9,7 +9,8 @@
         from_column (optional[str]): Column to read the assertions from.
         exclude_list (optional[list[str]]): Assertions to exclude in the filter.
         include_list (optional[list[str]]): Assertions to include in the filter.
-        re_assert (optional[bool]): to set to `true` if your assertion field do not exists yet in your table.
+        re_assert (optional[bool]): to set to `true` if your assertion field
+            is not calculated in your table.
 
     Returns:
         str: An SELECT expression to return rows with exceptions.

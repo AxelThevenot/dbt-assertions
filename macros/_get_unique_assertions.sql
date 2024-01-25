@@ -1,12 +1,13 @@
 {%- macro _get_unique_assertions(unique_columns) -%}
 {#-
-    Generates unique assertions based on the specified unique columns for exception tracking.
+    Generates unique assertions based on the specified unique columns.
 
     Args:
-        unique_columns (list[str|dict]): A list of column names or a nested structure containing columns
-            for which unique assertions should be generated.
+        unique_columns (list[str|dict]):  column names or a nested structure
+        containing columns for which unique assertions should be generated.
+
     Returns:
-        dict: A dictionary containing unique assertions for the specified columns.
+        dict: unique assertions for the specified columns.
 
     Example Usage:
         Suppose you have the following unique columns specified:
@@ -18,7 +19,7 @@
               - sub_column_1
               - sub_column_2
 
-        Calling the macro with these columns will generate unique assertions for each column:
+        Calling the macro with these columns will generate the following:
 
         {
           'unique': {
@@ -38,7 +39,6 @@
           }
         }
 
-    Notes: The macro handles both flat lists of columns and nested structures with sub-columns.
 #}
     {{- return(adapter.dispatch('_get_unique_assertions', 'dbt_assertions') (unique_columns)) }}
 {%- endmacro %}
@@ -61,7 +61,8 @@
         {%- do result.update({
                 'unique': {
                     'description': 'Row must be unique over the unique keys.',
-                    'expression': '1 = COUNT(1) OVER(PARTITION BY ' ~ ', '.join(unique_columns) ~ ')',
+                    'expression': '1 = COUNT(1) OVER(PARTITION BY ' 
+                        ~ ', '.join(unique_columns) ~ ')',
                 }
             })
         %}
@@ -74,18 +75,33 @@
 
         {#- Joins parts #}
         {%- for layer_dependence_key in depends_on + [parent_column] %}
-            {%- do expression.append('\n    ' ~ ('FROM' if loop.first else 'CROSS JOIN')) %}
-            {%- do expression.append(' UNNEST(' ~ layer_dependence_key ~') ' ~ layer_dependence_key) %}
+            {%- do expression.append(
+                '\n    ' ~ ('FROM' if loop.first else 'CROSS JOIN')
+                )
+            %}
+            {%- do expression.append(
+                ' UNNEST(' ~ layer_dependence_key ~') ' ~ layer_dependence_key
+                )
+            %}
         {%- endfor %}
 
         {#- QUALIFY parts #}
-        {%- do expression.append('\n    QUALIFY 1 < COUNT(1) OVER(\n    PARTITION BY') %}
+        {%- do expression.append(
+            '\n    QUALIFY 1 < COUNT(1) OVER(\n    PARTITION BY'
+            )
+        %}
         {%- for layer_dependence_key in depends_on + [parent_column] %}
 
             {%- set loop_last_layer = loop.last %}
             {%- for unique_column in layered_unique_columns[layer_dependence_key]['columns'] %}
-                {%- do expression.append('\n        ' ~ layer_dependence_key ~ '.' ~ unique_column) %}
-                {%- do expression.append('' if loop_last_layer and loop.last else ',') %}
+                {%- do expression.append(
+                    '\n        ' ~ layer_dependence_key ~ '.' ~ unique_column
+                    )
+                %}
+                {%- do expression.append(
+                    '' if loop_last_layer and loop.last else ','
+                    )
+                %}
 
             {%- endfor %}
         {%- endfor %}
@@ -95,7 +111,8 @@
 
         {%- do result.update({
                 '.'.join(depends_on + [parent_column]) ~'_unique': {
-                    'description': 'Items must be unique within' ~ '.'.join(parents_columns) ~ ' in the row.',
+                    'description': 'Items must be unique within'
+                        ~ '.'.join(parents_columns) ~ ' in the row.',
                     'expression': ''.join(expression),
                 }
             })

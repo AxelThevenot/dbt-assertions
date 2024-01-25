@@ -1,17 +1,16 @@
 {%- macro _get_not_null_assertions(not_null_columns) -%}
 {#-
-    Generates not-null assertions based on the specified columns for exception tracking.
+    Generates not-null assertions based on the specified columns.
 
-    This macro dynamically creates not-null assertions for the given columns or nested structures.
-    It is designed to be used in conjunction with the `assertions_expression` macro for constructing
-    row-level assertions.
+    This macro dynamically creates not-null assertions for the given columns or
+    nested structures. It is designed to be used in conjunction with
+    the `assertions()` macro for constructing row-level assertions.
 
     Args:
-        not_null_columns (list[str|dict]): A list of column names or a nested structure containing columns
-            for which not-null assertions should be generated.
+        not_null_columns (list[str|dict]): column names or nested structure.
 
     Returns:
-        dict: A dictionary containing not-null assertions for the specified columns.
+        dict: not-null assertions for the specified columns.
 
     Example Usage:
         Suppose you have the following not-null columns specified:
@@ -23,7 +22,7 @@
               sub_column_1
               sub_column_2
 
-        Calling the macro with these columns will generate not-null assertions for each column:
+        Calling the macro with these columns will generate the following:
 
         {
           'column_a_not_null': {
@@ -49,11 +48,6 @@
                 nested_structure.sub_column_2 IS NULL)'
           }
         }
-
-    Notes:
-        - The macro handles both flat lists of columns and nested structures with sub-columns.
-        - Recursive calls are made for nested structures to generate assertions for each sub-column.
-        - The resulting dictionary is used in constructing row-level assertions for not-null constraints.
 #}
     {{- return(adapter.dispatch('_get_not_null_assertions', 'dbt_assertions') (not_null_columns)) }}
 {%- endmacro %}
@@ -91,8 +85,14 @@
 
         {#- Joins parts #}
         {%- for layer_dependence_key in depends_on + [parent_column] %}
-            {%- do expression.append('\n    ' ~ ('FROM' if loop.first else 'CROSS JOIN')) %}
-            {%- do expression.append(' UNNEST(' ~ layer_dependence_key ~') ' ~ layer_dependence_key) %}
+            {%- do expression.append(
+                '\n    ' ~ ('FROM' if loop.first else 'CROSS JOIN')
+                )
+            %}
+            {%- do expression.append(
+                ' UNNEST(' ~ layer_dependence_key ~') ' ~ layer_dependence_key
+                )
+            %}
         {%- endfor %}
 
 
@@ -100,13 +100,22 @@
         {%- for column in not_null_columns %}
 
             {%- set column_where = [] %}
-            {%- do column_where.append('\n    WHERE ' ~ parent_column ~ ' IS NOT NULL') %}
-            {%- do column_where.append('\n    AND ' ~ parent_column ~ '.' ~ column ~ ' IS NULL') %}
+            {%- do column_where.append(
+                '\n    WHERE ' ~ parent_column ~ ' IS NOT NULL'
+                )
+            %}
+            {%- do column_where.append(
+                '\n    AND ' ~ parent_column ~ '.' ~ column ~ ' IS NULL'
+                )
+            %}
 
             {%- do result.update({
                 '.'.join(depends_on + [parent_column, column]) ~'_not_null': {
-                        'description': '.'.join(depends_on + [parent_column, column]) ~ ' are not null within the row.',
-                        'expression': ''.join(expression) ~ ''.join(column_where) ~ '\n)',
+                        'description': '.'.join(
+                                depends_on + [parent_column, column]
+                            ) ~ ' are not null within the row.',
+                        'expression': ''.join(expression)
+                            ~ ''.join(column_where) ~ '\n)',
                     }
                 })
             %}
