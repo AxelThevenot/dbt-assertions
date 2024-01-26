@@ -14,7 +14,7 @@ models:
   - name: basic_test_example_d_site
     tests:
       - dbt_assertions.generic_assertions:
-          from_column: exceptions
+          column: exceptions
           include_list:
             - site_id_is_not_null
           # `re_assert: true` to use only if your assertion's column
@@ -38,6 +38,6 @@ models:
               AND site_trigram = UPPER(site_trigram)
 ```
 
-You can also use the `exclude_list` and `from_columns` arguments,
+You can also use the `exclude_list` and `column` arguments,
 or use the function without arguments
 (and thus filtering each row based on every assertion).

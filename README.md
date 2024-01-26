@@ -113,7 +113,7 @@ Check the [basic_example](models/examples/basic_example) example.
 `assertions()` macro generates a select expression for row-level assertions.
 
 **Arguments:**
-- **from_column (optional[str]):** column to read the assertions from.
+- **column (optional[str]):** column to read the assertions from.
 
 ---
 
@@ -128,12 +128,12 @@ By default, it will generate assertions based on
 your [YAML model definition](#model-definition)
 reading configuration for a column named `exceptions`.
 
-You can call the macro using `from_column` argument to change this default column.
+You can call the macro using `column` argument to change this default column.
 
 ```sql
 SELECT
     *,
-    {{ dbt_assertions.assertions(from_column='warnings') }},
+    {{ dbt_assertions.assertions(column='warnings') }},
 FROM {{ ref('my_model') }}
 ```
 
@@ -162,7 +162,7 @@ FROM final
 assertions results, generated with the [`assertions()`](#assertions) macro.
 
 **Arguments:**
-- **from_column (optional[str]):** Column to read the exceptions from.
+- **column (optional[str]):** Column to read the exceptions from.
 - **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
 - **include_list (optional[list[str]]):** Assertions to include in the filter.
 - **reverse (optional[bool]):** returns rows without exception when `reverse=false`,
@@ -202,7 +202,7 @@ You can change this default behaviour specifying a exclude_list or include_list 
 You must defined beforehand the assertions for the model. [More on YAML definition for assertions](#yaml-general-definition).
 
 **Arguments:**
-- **from_column (optional[str]):** Column to read the exceptions from.
+- **column (optional[str]):** Column to read the exceptions from.
 - **exclude_list (optional[list[str]]):** Assertions to exclude in the filter.
 - **include_list (optional[list[str]]):** Assertions to include in the filter.
 - **re_assert (optional[bool]):** to set to `true` if your assertion field
@@ -215,7 +215,7 @@ model:
   name: my_model
   tests:
     - dbt_assertions.generic_assertions:
-      [from_column: <column_name>]
+      [column: <column_name>]
       [exclude_list: <list(str_to_filter)>]
       [include_list: <list(str_to_filter)>]
       [re_assert: true | false]
@@ -234,7 +234,7 @@ models:
   - name: basic_test_example_d_site
     tests:
       - dbt_assertions.generic_assertions:
-          from_column: exceptions
+          column: exceptions
           include_list:
             - site_id_is_not_null
           # `re_assert: true` to use only if your assertion's column
@@ -478,8 +478,8 @@ WITH final AS
     )
 SELECT
     *,
-    {{ dbt_assertions.assertions(from_column='errors') }},
-    {{ dbt_assertions.assertions(from_column='warns') }},
+    {{ dbt_assertions.assertions(column='errors') }},
+    {{ dbt_assertions.assertions(column='warns') }},
 FROM {{ ref('my_model') }}
 ```
 
