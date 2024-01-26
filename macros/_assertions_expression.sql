@@ -1,9 +1,9 @@
-{%- macro _assertions_expression(from_column, assertions) -%}
-    {{- adapter.dispatch('_assertions_expression', 'dbt_assertions') (from_column, assertions) }}
+{%- macro _assertions_expression(column, assertions) -%}
+    {{- adapter.dispatch('_assertions_expression', 'dbt_assertions') (column, assertions) }}
 {%- endmacro %}
 
 
-{%- macro default___assertions_expression(from_column, assertions) -%}
+{%- macro default___assertions_expression(column, assertions) -%}
 
 ARRAY_CONCAT(
     {%- for assertion_id, assertion_config in assertions.items() %}
@@ -28,6 +28,6 @@ ARRAY_CONCAT(
     ),
     {%- endfor %}
     CAST([] AS ARRAY<STRING>)
-) AS {{ from_column }}
+) AS {{ column }}
 
 {%- endmacro %}

@@ -1,4 +1,4 @@
-{%- macro assertions_filter(from_column='exceptions', exclude_list=none, include_list=none, reverse=false) -%}
+{%- macro assertions_filter(column='exceptions', exclude_list=none, include_list=none, reverse=false) -%}
 {#-
     Generates an expression to filter rows based on assertions results.
 
@@ -6,7 +6,7 @@
     You can change this behaviour specifying an exclude_list or include_list (not both).
 
     Args:
-        from_column (optional[str]): Column to read the exceptions from.
+        column (optional[str]): Column to read the exceptions from.
         exclude_list (optional[list[str]]): Assertions to exclude in the filter.
         include_list (optional[list[str]]): Assertions to include in the filter.
         reverse (optional[bool]): returns rows without exception when `reverse=false`,
@@ -25,10 +25,10 @@
     Note: This is not compatible with materialized view.
 -#}
 
-    {{- adapter.dispatch('assertions_filter', 'dbt_assertions') (from_column, exclude_list, include_list, reverse) }}
+    {{- adapter.dispatch('assertions_filter', 'dbt_assertions') (column, exclude_list, include_list, reverse) }}
 {%- endmacro %}
 
-{%- macro default__assertions_filter(from_column, exclude_list, include_list, reverse) -%}
+{%- macro default__assertions_filter(column, exclude_list, include_list, reverse) -%}
 
 {#- Check if both exclude_list and exclude_list are provided -#}
 {%- if exclude_list is not none and exclude_list is not none -%}
@@ -46,19 +46,19 @@
 {%- if exclude_list is not none -%}
 EXISTS (
     SELECT 1
-    FROM UNNEST({{ from_column }}) assertion_
+    FROM UNNEST({{ column }}) assertion_
     WHERE assertion_ NOT IN ('{{ exclude_list | join("\', \'")}}')
 )
-{%- elif exclude_list is not none -%}
+{%- elif include_list is not none -%}
 EXISTS (
     SELECT 1
-    FROM UNNEST({{ from_column }}) assertion_
-    WHERE assertion_ IN ('{{ exclude_list | join("\', \'")}}')
+    FROM UNNEST({{ column }}) assertion_
+    WHERE assertion_ IN ('{{ include_list | join("\', \'")}}')
 )
 {%- else -%}
 EXISTS (
     SELECT 1
-    FROM UNNEST({{ from_column }}) assertion_
+    FROM UNNEST({{ column }}) assertion_
     WHERE TRUE
 )
 {%- endif -%}

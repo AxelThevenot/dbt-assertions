@@ -1,4 +1,4 @@
-{%- macro assertions(from_column='exceptions', _node=none) %}
+{%- macro assertions(column='exceptions', _node=none) %}
 {#-
     Generates row-level assertions based on the schema model YAML.
 
@@ -7,7 +7,7 @@
     failed assertions (exceptions) for each row based on its assertions results.
 
     Args:
-        from_column (optional[str]): Column to read the exceptions from.
+        column (optional[str]): Column to read the exceptions from.
         _node (dict): any other node to read the columns from.
             This argument is reserved to `dbt-assertions`'s developers.
 
@@ -66,16 +66,16 @@
         an array of assertion IDs for each row where the assertions are violated.
 
 #}
-    {{- adapter.dispatch('assertions', 'dbt_assertions') (from_column, _node) }}
+    {{- adapter.dispatch('assertions', 'dbt_assertions') (column, _node) }}
 {%- endmacro %}
 
 
-{%- macro default__assertions(from_column, _node) %}
+{%- macro default__assertions(column, _node) %}
 
 {#- Parses the assertions if exists. #}
 {%- set model = model if _node is none else _node %}
 {%- set columns = model.columns if ('columns' in model) else {} %}
-{%- set assertions_column = columns[from_column] if (from_column in columns) else {} %}
+{%- set assertions_column = columns[column] if (column in columns) else {} %}
 {%- set assertions = assertions_column.assertions if ('assertions' in assertions_column) else {} %}
 
 {#- Generate assertions from helpers. #}
@@ -96,6 +96,6 @@
 {%- do assertions.update(dbt_assertions._get_not_null_assertions(__not_null__)) %}
 
 
-{{- dbt_assertions._assertions_expression(from_column, assertions) }}
+{{- dbt_assertions._assertions_expression(column, assertions) }}
 
 {%- endmacro %}
