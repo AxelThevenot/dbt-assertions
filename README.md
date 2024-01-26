@@ -39,7 +39,11 @@ testing the package easily without compromising your current workflows.
 **you can test the package with this generic test easily without having to rebuild you table**
 
 
-[<p align="center"><img src="img/dbt-assertions-video.png" width="67%"></p>](https://drive.google.com/file/d/1REdVQufkBVYu2m8Z2zxnXgBTsWvQdyYa/view?usp=sharing)
+<a href="https://drive.google.com/file/d/1REdVQufkBVYu2m8Z2zxnXgBTsWvQdyYa/view?usp=sharing">
+  <p align="center" href="https://drive.google.com/file/d/1REdVQufkBVYu2m8Z2zxnXgBTsWvQdyYa/view?usp=sharing">
+    <img src="img/dbt-assertions-video.png" width="67%">
+  </p>
+</a>
 
 ## Content
 
