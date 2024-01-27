@@ -496,7 +496,11 @@ Feel free to reach me [Linkedin](https://www.linkedin.com/in/axel-thevenot/).
 
 ## Acknowledgments
 
-Special thank to @vvaneeclo for its help !!
+Special thank to
+[Victor Vaneecloo](https://www.linkedin.com/in/victorvaneecloo/),
+[Guillaume Blaquiere](https://www.linkedin.com/in/guillaume-blaquiere-38693b15/),
+[Daniel Bartley](https://www.linkedin.com/in/dbrtly/)
+for their precious help !!
 
 ## Contact
 
