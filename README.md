@@ -50,6 +50,7 @@ testing the package easily without compromising your current workflows.
 - [Features](#features)
 - [Content](#content)
 - [Install](#install)
+- [Supported databases](#supported-databases)
 - [Dependencies](#dependencies)
 - [Variables](#variables)
 - [Basic Example](#basic-example)
@@ -90,10 +91,19 @@ packages:
     # <see https://github.com/AxelThevenot/dbt-assertions/releases/latest> for the latest version tag
 ```
 
-This package supports:
+## Supported databases
 
-* BigQuery
-* default (not tested on other databases, do not hesitate to contribute! ❤️)
+|**Database**|[assertions](#assertions)|[assertions_filter](#assertions_filter)|[\_\_unique__](#__unique__-helper)|[\_\_not_null__](#__not_null__-helper)|[generic_assertions](#generic_assertions)
+|:---:|:---:|:---:|:---:|:---:|:---:|
+|BigQuery (default)|✅|✅|✅|✅|✅|
+|Snowflake|✅ </br> (alpha)|✅ </br> (alpha)|❌|❌|✔️|
+|Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
+
+- ✅: supported
+- ✔️: supported not tested
+- ❌: not supported
+- ℹ️: Opened to contributions ❤️
+
 
 For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases/latest)
 
@@ -497,10 +507,11 @@ Feel free to reach me [Linkedin](https://www.linkedin.com/in/axel-thevenot/).
 ## Acknowledgments
 
 Special thank to
-[Victor Vaneecloo](https://www.linkedin.com/in/victorvaneecloo/),
-[Guillaume Blaquiere](https://www.linkedin.com/in/guillaume-blaquiere-38693b15/),
-[Daniel Bartley](https://www.linkedin.com/in/dbrtly/)
-for their precious help !!
+- [Victor Vaneecloo](https://www.linkedin.com/in/victorvaneecloo/) for the generic test
+- [Guillaume Blaquiere](https://www.linkedin.com/in/guillaume-blaquiere-38693b15/) for its help in terminology
+- [Daniel Bartley](https://www.linkedin.com/in/dbrtly/) for its help in terminology
+- [Benoit Perigaud](https://www.linkedin.com/in/benoit-perigaud/) for the Snowflake support
+
 
 ## Contact
 
