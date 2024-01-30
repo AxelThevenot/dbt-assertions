@@ -96,7 +96,7 @@ packages:
 |**Database**|[assertions](#assertions)|[assertions_filter](#assertions_filter)|[\_\_unique__](#__unique__-helper)|[\_\_not_null__](#__not_null__-helper)|[generic_assertions](#generic_assertions)
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |BigQuery (default)|✅|✅|✅|✅|✅|
-|Snowflake|✅ </br> (alpha)|✅ </br> (alpha)|✅ </br> (alpha, not nested fields)|✅ </br> (alpha, not nested fields)|✅ </br> (alpha)|
+|Snowflake|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
 
 - ✅: supported
