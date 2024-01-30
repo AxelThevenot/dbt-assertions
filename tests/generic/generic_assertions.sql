@@ -17,7 +17,7 @@
 -#}
 
 WITH
-    final AS (
+    dbt_assertions_final AS (
         SELECT
             *
             {%- if re_assert and execute %}
@@ -45,7 +45,7 @@ WITH
 
 SELECT
     *
-FROM `final`
+FROM dbt_assertions_final
 WHERE {{ dbt_assertions.assertions_filter(column, exclude_list, include_list, reverse=true) }}
 
 {% endtest %}
