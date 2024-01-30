@@ -210,7 +210,7 @@ WHERE {{ dbt_assertions.assertions_filter(exclude_list=['assertions_id']) }}
 
 ####  [generic_assertions](tests/generic/generic_assertions.sql)
 
-Generates a test to get rows based on exceptionss.
+Generates a test to get rows based on exceptions.
 
 It will returns the rows without any exception by default.
 You can change this default behaviour specifying a exclude_list or include_list (not both).
@@ -294,7 +294,7 @@ Custom assertions are the basics assertions.
 It is represented as key values. Keys are the ID of the assertions.
 
 Each assertions is defined by at least an `expression` which will be rendered
-to be evaulated as your test.
+to be evaluated as your test.
 
 `description` and [`null_as_exception`](#null_as_exception) are optional.
 
@@ -371,7 +371,7 @@ assertions:
 ---
 
 You can also verify unique keys for nested/repeated structure. It will generate:
-- One assertion for the 0-depth guaranteeing uniqueness **accross the rows**.
+- One assertion for the 0-depth guaranteeing uniqueness **across the rows**.
 - One assertion **for each** repeated field guaranteeing uniqueness **within the row**.
 
 
@@ -495,7 +495,7 @@ WITH final AS
 SELECT
     *,
     {{ dbt_assertions.assertions(column='errors') }},
-    {{ dbt_assertions.assertions(column='warns') }},
+    {{ dbt_assertions.assertions(column='warns') }}
 FROM {{ ref('my_model') }}
 ```
 
