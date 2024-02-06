@@ -22,18 +22,13 @@ WITH
             *
             {%- if re_assert and execute %}
 
-                {%- set model_parts = (model | replace('`', '')).split('.') %}
-                {%- set database    = model_parts[0] %}
-                {%- set schema      = model_parts[1] %}
-                {%- set alias       = model_parts[2] %}
-
                 {#- Filter the graph to find the node for the specified model -#}
                 {%- set node = (
                         graph.nodes.values()
                         | selectattr('resource_type', 'equalto', 'model')
-                        | selectattr('database'     , 'equalto', database)
-                        | selectattr('schema'       , 'equalto', schema)
-                        | selectattr('alias'        , 'equalto', alias)
+                        | selectattr('database'     , 'equalto', model.database)
+                        | selectattr('schema'       , 'equalto', model.schema)
+                        | selectattr('alias'        , 'equalto', model.alias or model.name)
                     ) | first -%}
 
                 ,
