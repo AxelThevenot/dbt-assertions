@@ -61,3 +61,31 @@ ARRAY_CONSTRUCT_COMPACT(
 ) AS {{ column }}
 
 {%- endmacro %}
+
+
+{%- macro duckdb___assertions_expression(column, assertions) -%}
+
+LIST_DISTINCT([
+    {%- for assertion_id, assertion_config in assertions.items() %}
+
+    {%- set expression =
+        assertion_config.expression
+        if '\n' not in assertion_config.expression
+        else assertion_config.expression | indent(12) -%}
+
+    {%- set description= assertion_config.description -%}
+    {%- set null_as_exception =
+        'FALSE'
+        if (assertion_config.null_as_exception is not defined
+            or assertion_config.null_as_exception is true)
+        else 'TRUE' %}
+
+    /* {{ assertion_id }}: {{ description }} */
+    CASE WHEN COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE
+        THEN '{{ assertion_id }}'
+        ELSE NULL
+    END,
+    {%- endfor %}
+]) AS {{ column }}
+
+{%- endmacro %}
