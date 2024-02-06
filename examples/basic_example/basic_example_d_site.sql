@@ -1,5 +1,5 @@
 {{
-    config(alias='d_site_test', materialized='table', enabled=false)
+    config(alias='d_site', materialized='table', enabled=false)
 }}
 
 WITH
@@ -21,4 +21,5 @@ WITH
     )
 SELECT
     *,
-FROM `final`
+    {{ dbt_assertions.assertions() | indent(4) }}
+FROM final
