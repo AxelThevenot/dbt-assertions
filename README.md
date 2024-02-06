@@ -102,7 +102,7 @@ packages:
 - ✅: supported
 - ✔️: supported not tested
 - ❌: not supported
-- ℹ️: Opened to contributions ❤️
+- ℹ️: Opened to contributions ❤️ (see the integration_tests folder on how to test your adapter)
 
 
 For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases/latest)
@@ -118,7 +118,7 @@ This package do not have variables.
 
 ## Basic Example
 
-Check the [basic_example](models/examples/basic_example) example.
+Check the [basic_example](examples/basic_example) example.
 
 ## Documentation
 
@@ -242,7 +242,7 @@ model:
 
 `[]` represents optional parts. Yes everything is optional but let's see it by examples.
 
-In the [basic test example](./models/examples/basic_test_example/)
+In the [basic test example](./examples/basic_test_example/)
 you can easily create your test as follows then run your `dbt test` command.
 
 ```yml
