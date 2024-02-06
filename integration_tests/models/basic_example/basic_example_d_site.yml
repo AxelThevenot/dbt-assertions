@@ -4,7 +4,7 @@ models:
   - name: basic_example_d_site
     columns:
       - name: site_id
-      - name: country_trigram
+      - name: site_trigram
       - name: open_date
       - name: exceptions
         assertions:
@@ -17,3 +17,9 @@ models:
             expression: |
               LENGTH(site_trigram) = 3
               AND site_trigram = UPPER(site_trigram)
+          
+          __unique__:
+            - open_date
+          __not_null__:
+            - site_id
+            - site_trigram
