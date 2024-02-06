@@ -90,3 +90,29 @@ ARRAY_SIZE({{ column }}) = 0
 {%- endif -%}
 
 {%- endmacro %}
+
+
+{%- macro duckdb__assertions_filter(column, exclude_list, include_list, reverse) -%}
+
+{#- Check if both exclude_list and include_list are provided -#}
+{%- if exclude_list is not none and include_list is not none -%}
+    {{
+        exceptions.raise_compiler_error(
+            'exclude_list or include_list must be provided. Not both.'
+            ~ 'Got (exclude_list: ' ~ exclude_list 
+            ~ ', include_list: ' ~ include_list ~ ')'
+        )
+    }}
+{%- endif -%}
+
+{#- Generate filtering expression  -#}
+{{- 'NOT ' if reverse else '' -}}
+{%- if include_list is not none -%}
+LEN(ARRAY_INTERSECT({{ column }},['{{ include_list | join("\', \'")}}'])) = 0
+{%- elif exclude_list is not none -%}
+LEN(ARRAY_EXCEPT({{ column }},['{{ exclude_list | join("\', \'")}}'])) = 0
+{%- else -%}
+LEN({{ column }}) = 0
+{%- endif -%}
+
+{%- endmacro %}
