@@ -16,5 +16,7 @@ WITH
             DATE('2023-01-01') AS open_date
     )
 SELECT
-    *
+    *,
+    {{ dbt_assertions.assertions(column='errors') | indent(4) }},
+    {{ dbt_assertions.assertions(column='warns') | indent(4) }}
 FROM final

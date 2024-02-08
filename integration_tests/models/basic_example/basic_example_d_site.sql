@@ -1,7 +1,3 @@
-{{
-    config(alias='d_site', materialized='table')
-}}
-
 WITH
     final AS (
         SELECT
