@@ -103,7 +103,7 @@ packages:
 - ✅: supported
 - ✔️: supported not tested
 - ❌: not supported
-- ℹ️: Opened to contributions ❤️ (see the integration_tests folder on how to test your adapter)
+- ℹ️: Opened to contributions ❤️ (see the [integration_tests](./integration_tests/) folder on how to test your adapter)
 
 
 For latest release, see [https://github.com/AxelThevenot/dbt-assertions/releases](https://github.com/AxelThevenot/dbt-assertions/releases/latest)

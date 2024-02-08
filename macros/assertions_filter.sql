@@ -82,9 +82,9 @@ EXISTS (
 {#- Generate filtering expression  -#}
 {{- 'NOT ' if reverse else '' -}}
 {%- if include_list is not none -%}
-ARRAY_SIZE(ARRAY_INTERSECTION({{ column }},ARRAY_CONSTRUCT('{{ include_list | join("\', \'")}}'))) = 0
+ARRAY_SIZE(ARRAY_INTERSECTION({{ column }}, ARRAY_CONSTRUCT('{{ include_list | join("\', \'")}}'))) = 0
 {%- elif exclude_list is not none -%}
-ARRAY_SIZE(ARRAY_EXCEPT({{ column }},ARRAY_CONSTRUCT('{{ exclude_list | join("\', \'")}}'))) = 0
+ARRAY_SIZE(ARRAY_EXCEPT({{ column }}, ARRAY_CONSTRUCT('{{ exclude_list | join("\', \'")}}'))) = 0
 {%- else -%}
 ARRAY_SIZE({{ column }}) = 0
 {%- endif -%}
@@ -108,9 +108,9 @@ ARRAY_SIZE({{ column }}) = 0
 {#- Generate filtering expression  -#}
 {{- 'NOT ' if reverse else '' -}}
 {%- if include_list is not none -%}
-LEN(ARRAY_INTERSECT({{ column }},['{{ include_list | join("\', \'")}}'])) = 0
+LEN(ARRAY_INTERSECT({{ column }}, ['{{ include_list | join("\', \'")}}'])) = 0
 {%- elif exclude_list is not none -%}
-LEN(ARRAY_EXCEPT({{ column }},['{{ exclude_list | join("\', \'")}}'])) = 0
+LEN(ARRAY_EXCEPT({{ column }}, ['{{ exclude_list | join("\', \'")}}'])) = 0
 {%- else -%}
 LEN({{ column }}) = 0
 {%- endif -%}
