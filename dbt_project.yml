@@ -12,3 +12,7 @@ require-dbt-version: [">=1.7.0", "<2.0.0"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 macro-paths: ["macros"]
+
+
+vars:
+    "dbt_assertions:default_column": "exceptions"
