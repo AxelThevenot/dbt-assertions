@@ -1,4 +1,10 @@
-{% test generic_assertions(model, column='exceptions', exclude_list=none, include_list=none, re_assert=False) %}
+{% test generic_assertions(
+    model,
+    column=var('dbt_assertions:default_column', 'exceptions'),
+    exclude_list=none,
+    include_list=none,
+    re_assert=False
+) %}
 {#-
     Generates a test SELECT expression to get rows based on exceptions.
 

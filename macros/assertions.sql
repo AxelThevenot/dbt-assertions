@@ -1,4 +1,4 @@
-{%- macro assertions(column='exceptions', _node=none) %}
+{%- macro assertions(column=var('dbt_assertions:default_column', 'exceptions'), _node=none) %}
 {#-
     Generates row-level assertions based on the schema model YAML.
 

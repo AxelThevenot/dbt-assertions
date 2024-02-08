@@ -115,7 +115,12 @@ This package do not have dependencies.
 
 ## Variables
 
-This package do not have variables.
+The following variable **can** be defined in your `dbt_project.yml` file to change the default `exceptions` column name used by the package.
+
+```yml
+vars:
+    "dbt_assertions:default_column": "exceptions"
+```
 
 ## Basic Example
 

@@ -1,4 +1,9 @@
-{%- macro assertions_filter(column='exceptions', exclude_list=none, include_list=none, reverse=false) -%}
+{%- macro assertions_filter(
+    column=var('dbt_assertions:default_column', 'exceptions'),
+    exclude_list=none,
+    include_list=none,
+    reverse=false
+) -%}
 {#-
     Generates an expression to filter rows based on assertions results.
 
