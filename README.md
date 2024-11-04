@@ -98,6 +98,7 @@ packages:
 |BigQuery (default)|✅|✅|✅|✅|✅|
 |Snowflake|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |DuckDB|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
+|Databricks|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
 
 - ✅: supported
@@ -517,6 +518,7 @@ Special thank to
 - [Guillaume Blaquiere](https://www.linkedin.com/in/guillaume-blaquiere-38693b15/) for its help in terminology
 - [Daniel Bartley](https://www.linkedin.com/in/dbrtly/) for its help in terminology
 - [Benoit Perigaud](https://www.linkedin.com/in/benoit-perigaud/) for the Snowflake support
+- [Ferdy Hulzebos](https://www.linkedin.com/in/ferdyhulzebos/) for the Databricks support
 
 
 ## Contact
