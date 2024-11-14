@@ -99,6 +99,7 @@ packages:
 |Snowflake|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |DuckDB|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Databricks|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
+|Redshift|✅|✅</br> (Include/Exclude Fields Not Supported)|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
 
 - ✅: supported
