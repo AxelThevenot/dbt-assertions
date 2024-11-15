@@ -520,6 +520,7 @@ Special thank to
 - [Daniel Bartley](https://www.linkedin.com/in/dbrtly/) for its help in terminology
 - [Benoit Perigaud](https://www.linkedin.com/in/benoit-perigaud/) for the Snowflake support
 - [Ferdy Hulzebos](https://www.linkedin.com/in/ferdyhulzebos/) for the Databricks support
+- [Rich Herman](https://www.linkedin.com/in/rich-herman-1149326/) for the Redshift support
 
 
 ## Contact
