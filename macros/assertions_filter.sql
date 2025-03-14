@@ -164,3 +164,22 @@ SIZE({{ column }}) = 0
 GET_ARRAY_LENGTH({{ column }}) = 0
 
 {%- endmacro %}
+
+{%- macro athena__assertions_filter(column, exclude_list, include_list, reverse) -%}
+
+{#- Check if both exclude_list and include_list are provided -#}
+{%- if exclude_list is not none and include_list is not none -%}
+    {{
+        exceptions.warn(
+            'exclude_list and include_list is not supported for Athena.'
+            ~ 'Got (exclude_list: ' ~ exclude_list
+            ~ ', include_list: ' ~ include_list ~ ')'
+        )
+    }}
+{%- endif -%}
+
+{#- Generate filtering expression  -#}
+{{- 'NOT ' if reverse else '' -}}
+CARDINALITY({{ column }}) = 0
+
+{%- endmacro %}
