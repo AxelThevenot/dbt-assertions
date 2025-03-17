@@ -147,7 +147,6 @@ ARRAY_FLATTEN(
 
 {%- macro athena___assertions_expression(column, assertions) -%}
 
-ARRAY_JOIN(
     ARRAY[
         {%- for assertion_id, assertion_config in assertions.items() %}
         {%- set expression =
@@ -168,9 +167,8 @@ ARRAY_JOIN(
         ),
         {%- endfor %}
         NULL
-    ],
-    ','
-) AS {{ column }}
+    ]
+ AS {{ column }}
 
 {%- endmacro %}
  

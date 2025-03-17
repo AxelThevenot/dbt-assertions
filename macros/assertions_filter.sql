@@ -170,8 +170,8 @@ GET_ARRAY_LENGTH({{ column }}) = 0
 {#- Check if both exclude_list and include_list are provided -#}
 {%- if exclude_list is not none and include_list is not none -%}
     {{
-        exceptions.warn(
-            'exclude_list and include_list is not supported for Athena.'
+        exceptions.raise_compiler_error(
+            'exclude_list or include_list must be provided. Not both.'
             ~ 'Got (exclude_list: ' ~ exclude_list
             ~ ', include_list: ' ~ include_list ~ ')'
         )
@@ -180,6 +180,12 @@ GET_ARRAY_LENGTH({{ column }}) = 0
 
 {#- Generate filtering expression  -#}
 {{- 'NOT ' if reverse else '' -}}
+{%- if include_list is not none -%}
+CARDINALITY(ARRAY_INTERSECT({{ column }}, ARRAY['{{ include_list | join("\', \'")}}'])) = 0
+{%- elif exclude_list is not none -%}
+CARDINALITY(ARRAY_EXCEPT({{ column }}, ARRAY['{{ exclude_list | join("\', \'")}}'])) = 0
+{%- else -%}
 CARDINALITY({{ column }}) = 0
+{%- endif -%}
 
 {%- endmacro %}
