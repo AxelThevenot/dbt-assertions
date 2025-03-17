@@ -100,6 +100,7 @@ packages:
 |DuckDB|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Databricks|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Redshift|✅|✅</br> (Include/Exclude Fields Not Supported)|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
+|Athena|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
 
 - ✅: supported
@@ -521,7 +522,7 @@ Special thank to
 - [Benoit Perigaud](https://www.linkedin.com/in/benoit-perigaud/) for the Snowflake support
 - [Ferdy Hulzebos](https://www.linkedin.com/in/ferdyhulzebos/) for the Databricks support
 - [Rich Herman](https://www.linkedin.com/in/rich-herman-1149326/) for the Redshift support
-
+- [Vaisakh Mohan](https://www.linkedin.com/in/vaisakh-mohan-123b0936/) for the Athena support
 
 ## Contact
 
