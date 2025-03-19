@@ -181,11 +181,11 @@ GET_ARRAY_LENGTH({{ column }}) = 0
 {#- Generate filtering expression  -#}
 {{- 'NOT ' if reverse else '' -}}
 {%- if include_list is not none -%}
-CARDINALITY(ARRAY_INTERSECT({{ column }}, ARRAY['{{ include_list | join("\', \'")}}'])) = 0
+CARDINALITY(filter(ARRAY_INTERSECT({{ column }}, ARRAY['{{ include_list | join("\', \'")}}']),  x -> x IS NOT NULL)) = 0
 {%- elif exclude_list is not none -%}
-CARDINALITY(ARRAY_EXCEPT({{ column }}, ARRAY['{{ exclude_list | join("\', \'")}}'])) = 0
+CARDINALITY(filter(ARRAY_EXCEPT({{ column }}, ARRAY['{{ exclude_list | join("\', \'")}}']),  x -> x IS NOT NULL)) = 0
 {%- else -%}
-CARDINALITY({{ column }}) = 0
+CARDINALITY(filter({{ column }}, x -> x IS NOT NULL)) = 0
 {%- endif -%}
 
 {%- endmacro %}
