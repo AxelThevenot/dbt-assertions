@@ -101,6 +101,7 @@ packages:
 |Databricks|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Redshift|✅|✅</br> (Include/Exclude Fields Not Supported)|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Athena|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
+|Clickhouse|✅|✅|✅ </br>(not nested fields)|✅ </br>(not nested fields)|✅|
 |Others|ℹ️|ℹ️|ℹ️|ℹ️|ℹ️|
 
 - ✅: supported
