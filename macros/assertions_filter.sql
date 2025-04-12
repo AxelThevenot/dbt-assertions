@@ -189,3 +189,30 @@ CARDINALITY(filter({{ column }}, x -> x IS NOT NULL)) = 0
 {%- endif -%}
 
 {%- endmacro %}
+
+
+
+{%- macro clickhouse_assertions_filter(column, exclude_list, include_list, reverse) -%}
+
+{#- Check if both exclude_list and include_list are provided -#}
+{%- if exclude_list is not none and include_list is not none -%}
+    {{
+        exceptions.raise_compiler_error(
+            'exclude_list or include_list must be provided. Not both.'
+            ~ 'Got (exclude_list: ' ~ exclude_list
+            ~ ', include_list: ' ~ include_list ~ ')'
+        )
+    }}
+{%- endif -%}
+
+{#- Generate filtering expression  -#}
+{{- 'NOT ' if reverse else '' -}}
+{%- if include_list is not none -%}
+length(arrayFilter(x -> has(['{{ include_list | join("\', \'")}}'], x), {{ column }})) = 0
+{%- elif exclude_list is not none -%}
+length(arrayFilter(x -> NOT has(['{{ exclude_list | join("\', \'")}}'], x), {{ column }})) = 0
+{%- else -%}
+length({{ column }}) = 0
+{%- endif -%}
+
+{%- endmacro %}
