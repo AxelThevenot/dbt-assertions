@@ -208,7 +208,7 @@ CARDINALITY(filter({{ column }}, x -> x IS NOT NULL)) = 0
 {#- Generate filtering expression  -#}
 {{- 'NOT ' if reverse else '' -}}
 {%- if include_list is not none -%}
-length(arrayFilter(x -> has(['{{ include_list | join("\', \'")}}'], x), {{ column }})) = 0
+length(arrayIntersect({{ column }}, ['{{ include_list | join("\', \'")}}'])) = 0
 {%- elif exclude_list is not none -%}
 length(arrayFilter(x -> NOT has(['{{ exclude_list | join("\', \'")}}'], x), {{ column }})) = 0
 {%- else -%}
