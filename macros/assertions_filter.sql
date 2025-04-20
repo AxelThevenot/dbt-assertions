@@ -192,7 +192,7 @@ CARDINALITY(filter({{ column }}, x -> x IS NOT NULL)) = 0
 
 
 
-{%- macro clickhouse_assertions_filter(column, exclude_list, include_list, reverse) -%}
+{%- macro clickhouse__assertions_filter(column, exclude_list, include_list, reverse) -%}
 
 {#- Check if both exclude_list and include_list are provided -#}
 {%- if exclude_list is not none and include_list is not none -%}
