@@ -177,7 +177,7 @@ ARRAY_FLATTEN(
 
 {%- macro clickhouse___assertions_expression(column, assertions) -%}
 
-arrayConcat([
+arrayFilter(x -> x IS NOT NULL, [
     {%- for assertion_id, assertion_config in assertions.items() %}
 
     {%- set expression =
@@ -185,7 +185,7 @@ arrayConcat([
         if '\n' not in assertion_config.expression
         else assertion_config.expression | indent(12) -%}
 
-    {%- set description= assertion_config.description -%}
+    {%- set description = assertion_config.description -%}
     {%- set null_as_exception =
         'FALSE'
         if (assertion_config.null_as_exception is not defined
@@ -193,10 +193,11 @@ arrayConcat([
         else 'TRUE' %}
 
     /* {{ assertion_id }}: {{ description }} */
-    CASE WHEN COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE
-        THEN '{{ assertion_id }}'
-        ELSE CAST(NULL AS STRING)
-    END,
+    CASE
+        WHEN COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE THEN '{{ assertion_id }}'
+        ELSE NULL
+    END
+    {%- if not loop.last %},{% endif %}
     {%- endfor %}
 ]) AS {{ column }}
 
