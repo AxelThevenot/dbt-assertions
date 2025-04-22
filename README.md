@@ -524,7 +524,7 @@ Special thank to
 - [Ferdy Hulzebos](https://www.linkedin.com/in/ferdyhulzebos/) for the Databricks support
 - [Rich Herman](https://www.linkedin.com/in/rich-herman-1149326/) for the Redshift support
 - [Vaisakh Mohan](https://www.linkedin.com/in/vaisakh-mohan-123b0936/) for the Athena support
-- [Fraçois Lenne](https://www.linkedin.com/in/fran%C3%A7ois-lenne-5975b9174/) for the Clickhouse support
+- [François Lenne](https://www.linkedin.com/in/fran%C3%A7ois-lenne-5975b9174/) for the Clickhouse support
 
 ## Contact
 
