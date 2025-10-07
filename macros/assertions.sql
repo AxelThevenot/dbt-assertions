@@ -76,7 +76,7 @@
 {%- set model = model if _node is none else _node %}
 {%- set columns = model.columns if ('columns' in model) else {} %}
 {%- set assertions_column = columns[column] if (column in columns) else {} %}
-{%- set assertions = assertions_column.assertions if ('assertions' in assertions_column) else {} %}
+{%- set assertions = dbt_assertions.get_assertions(assertions_column) %}
 
 {#- Generate assertions from helpers. #}
 {%- set __unique__ = {} %}
