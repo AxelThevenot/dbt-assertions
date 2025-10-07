@@ -7,6 +7,44 @@ Suppose we are working with the `d_site` table - you want to use generic tests.
 For instance, the `include_list` argument will filter all rows
 containing at least a "site_id_is_not_null" exception:
 
+Config valid for dbt Core and Fusion, with test arguments under `arguments`: and assertions under `config.meta`
+
+```yml
+version: 2
+
+models:
+  - name: basic_test_example_d_site
+    tests:
+      - dbt_assertions.generic_assertions:
+          arguments:
+            column: exceptions
+            include_list:
+              - site_id_is_not_null
+            # `re_assert: true` to use only if your assertion's column
+            # is not computed and saved in your table.
+            re_assert: true
+
+    columns:
+      - name: site_id
+      - name: country_trigram
+      - name: open_date
+      - name: exceptions
+        config:
+          meta:
+            assertions:
+              site_id_is_not_null:
+                description: 'Site ID is not null.'
+                expression: site_id IS NOT NULL
+
+              site_trigram_format:
+                description: 'Site trigram must contain 3 upper digits'
+                expression: |
+                  LENGTH(site_trigram) = 3
+                  AND site_trigram = UPPER(site_trigram)
+```
+
+Config valid for dbt Core, as a top level key
+
 ```yml
 version: 2
 

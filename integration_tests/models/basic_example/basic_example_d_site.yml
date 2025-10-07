@@ -7,19 +7,21 @@ models:
       - name: site_trigram
       - name: open_date
       - name: exceptions
-        assertions:
-          site_id_is_not_null:
-            description: 'Site ID is not null.'
-            expression: site_id IS NOT NULL
+        config:
+          meta:
+            assertions:
+              site_id_is_not_null:
+                description: 'Site ID is not null.'
+                expression: site_id IS NOT NULL
 
-          site_trigram_format:
-            description: 'Site trigram must contain 3 upper digits'
-            expression: |
-              LENGTH(site_trigram) = 3
-              AND site_trigram = UPPER(site_trigram)
-          
-          __unique__:
-            - open_date
-          __not_null__:
-            - site_id
-            - site_trigram
+              site_trigram_format:
+                description: 'Site trigram must contain 3 upper digits'
+                expression: |
+                  LENGTH(site_trigram) = 3
+                  AND site_trigram = UPPER(site_trigram)
+              
+              __unique__:
+                - open_date
+              __not_null__:
+                - site_id
+                - site_trigram
