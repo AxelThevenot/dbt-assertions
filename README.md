@@ -235,8 +235,25 @@ You must defined beforehand the assertions for the model. [More on YAML definiti
 - **re_assert (optional[bool]):** to set to `true` if your assertion field
   is not calculated in your table.
 
-Configure the generic test in schema.yml with:
+Configure the generic test in schema.yml with either
 
+The configuration valid for dbt Core and Fusion, with test arguments under `arguments`
+```yml
+model:
+  name: my_model
+  tests:
+    - dbt_assertions.generic_assertions:
+      arguments:
+        [column: <column_name>]
+        [exclude_list: <list(str_to_filter)>]
+        [include_list: <list(str_to_filter)>]
+        [re_assert: true | false]
+
+  columns:
+    ...
+```
+
+Or the configuration valid for dbt Core only
 ```yml
 model:
   name: my_model
@@ -251,6 +268,7 @@ model:
     ...
 ```
 
+
 `[]` represents optional parts. Yes everything is optional but let's see it by examples.
 
 In the [basic test example](./examples/basic_test_example/)
@@ -261,12 +279,13 @@ models:
   - name: basic_test_example_d_site
     tests:
       - dbt_assertions.generic_assertions:
-          column: exceptions
-          include_list:
-            - site_id_is_not_null
-          # `re_assert: true` to use only if your assertion's column
-          # is not computed and saved in your table.
-          re_assert: true
+          arguments:
+            column: exceptions
+            include_list:
+              - site_id_is_not_null
+            # `re_assert: true` to use only if your assertion's column
+            # is not computed and saved in your table.
+            re_assert: true
 
     columns:
       ...
@@ -481,19 +500,23 @@ model:
   name: my_model
   columns:
     ...
-    - errors:
-      assertions:
-        __unique__:
-            - key_1
-            - key_2
+    - errors
+      config:
+        meta:
+          assertions:
+            __unique__:
+                - key_1
+                - key_2
 
-        __not_null__: __unique__
+            __not_null__: __unique__
 
-    - warns:
-      assertions:
-        site_creation_date_is_past:
-          description: "Site must be created in the past."
-          expression: "site_creation_date <= CURRENT_DATE()"
+    - warns
+      config:
+        meta:
+          assertions:
+            site_creation_date_is_past:
+              description: "Site must be created in the past."
+              expression: "site_creation_date <= CURRENT_DATE()"
 ```
 
 And in your model query.
