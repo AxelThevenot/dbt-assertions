@@ -83,11 +83,11 @@
 {%- set __not_null__ = {} %}
 
 {%- if '__unique__' in assertions %}
-    {%- set __unique__ = assertions.pop('__unique__', {}) %}
+    {%- set __unique__ = assertions.pop('__unique__') %}
 {%- endif %}
 
 {%- if '__not_null__' in assertions %}
-    {%- set __not_null__ = assertions.pop('__not_null__', {}) %}
+    {%- set __not_null__ = assertions.pop('__not_null__') %}
     {%- set __not_null__ = __not_null__ if ('__unique__' not in __not_null__) else __unique__ %}
 {%- endif %}
 
