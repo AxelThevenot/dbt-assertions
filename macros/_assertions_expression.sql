@@ -92,7 +92,7 @@ LIST_DISTINCT([
 
 {%- macro databricks___assertions_expression(column, assertions) -%}
 
-ARRAY_DISTINCT(ARRAY(
+FILTER(ARRAY_DISTINCT(ARRAY(
     {%- for assertion_id, assertion_config in assertions.items() %}
 
     {%- set expression =
@@ -114,7 +114,7 @@ ARRAY_DISTINCT(ARRAY(
         string(null)
     ){% if not loop.last %},{% endif %}
     {%- endfor %}
-)) AS {{ column }}
+)), x -> x IS NOT NULL) AS {{ column }}
 
 {%- endmacro %}
 
