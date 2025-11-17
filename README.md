@@ -87,7 +87,7 @@ Include in `packages.yml`
 ```yaml
 packages:
   - package: AxelThevenot/dbt_assertions
-    version: [">=1.0.0", "<2.0.0"]
+    version: [">=1.0.0", "<3.0.0"]
     # <see https://github.com/AxelThevenot/dbt-assertions/releases/latest> for the latest version tag
 ```
 
