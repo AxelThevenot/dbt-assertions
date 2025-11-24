@@ -92,7 +92,9 @@ LIST_DISTINCT([
 
 {%- macro databricks___assertions_expression(column, assertions) -%}
 
-FILTER(ARRAY_DISTINCT(ARRAY(
+{# Build the base array expression once in Jinja so we can reuse it #}
+{%- set failures_array -%}
+ARRAY_DISTINCT(ARRAY(
     {%- for assertion_id, assertion_config in assertions.items() %}
 
     {%- set expression =
@@ -100,7 +102,7 @@ FILTER(ARRAY_DISTINCT(ARRAY(
         if '\n' not in assertion_config.expression
         else assertion_config.expression | indent(12) -%}
 
-    {%- set description= assertion_config.description -%}
+    {%- set description = assertion_config.description -%}
     {%- set null_as_exception =
         'FALSE'
         if (assertion_config.null_as_exception is not defined
@@ -111,12 +113,27 @@ FILTER(ARRAY_DISTINCT(ARRAY(
     IF(
         COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE,
         '{{ assertion_id }}',
-        string(null)
+        CAST(NULL AS STRING)
     ){% if not loop.last %},{% endif %}
     {%- endfor %}
-)), x -> x IS NOT NULL) AS {{ column }}
+))
+{%- endset %}
+
+COALESCE(
+    CASE
+        -- If the distinct array is exactly [NULL], treat it as "no failures"
+        WHEN cardinality({{ failures_array }}) = 1
+             AND element_at({{ failures_array }}, 1) IS NULL
+        THEN ARRAY()
+
+        -- Otherwise, return the failures as-is
+        ELSE {{ failures_array }}
+    END,
+    ARRAY()
+) AS {{ column }}
 
 {%- endmacro %}
+
 
 {%- macro redshift___assertions_expression(column, assertions) -%}
 
