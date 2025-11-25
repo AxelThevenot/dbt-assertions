@@ -92,44 +92,34 @@ LIST_DISTINCT([
 
 {%- macro databricks___assertions_expression(column, assertions) -%}
 
-{# Build the base array expression once in Jinja so we can reuse it #}
-{%- set failures_array -%}
-ARRAY_DISTINCT(ARRAY(
-    {%- for assertion_id, assertion_config in assertions.items() %}
-
-    {%- set expression =
-        assertion_config.expression
-        if '\n' not in assertion_config.expression
-        else assertion_config.expression | indent(12) -%}
-
-    {%- set description = assertion_config.description -%}
-    {%- set null_as_exception =
-        'FALSE'
-        if (assertion_config.null_as_exception is not defined
-            or assertion_config.null_as_exception is true)
-        else 'TRUE' %}
-
-    /* {{ assertion_id }}: {{ description }} */
-    IF(
-        COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE,
-        '{{ assertion_id }}',
-        CAST(NULL AS STRING)
-    ){% if not loop.last %},{% endif %}
-    {%- endfor %}
-))
-{%- endset %}
-
 COALESCE(
-    CASE
-        -- If the distinct array is exactly [NULL], treat it as "no failures"
-        WHEN cardinality({{ failures_array }}) = 1
-             AND element_at({{ failures_array }}, 1) IS NULL
-        THEN ARRAY()
+  ARRAY_EXCEPT(
+    ARRAY(
+      {%- for assertion_id, assertion_config in assertions.items() %}
 
-        -- Otherwise, return the failures as-is
-        ELSE {{ failures_array }}
-    END,
-    ARRAY()
+      {%- set expression =
+          assertion_config.expression
+          if '\n' not in assertion_config.expression
+          else assertion_config.expression | indent(12) -%}
+
+      {%- set description = assertion_config.description -%}
+      {%- set null_as_exception =
+          'FALSE'
+          if (assertion_config.null_as_exception is not defined
+              or assertion_config.null_as_exception is true)
+          else 'TRUE' %}
+
+      /* {{ assertion_id }}: {{ description }} */
+      IF(
+          COALESCE({{ expression }}, {{ null_as_exception }}) = FALSE,
+          '{{ assertion_id }}',
+          CAST(NULL AS STRING)
+      ){% if not loop.last %},{% endif %}
+      {%- endfor %}
+    ),
+    ARRAY(CAST(NULL AS STRING))
+  ),
+  ARRAY()
 ) AS {{ column }}
 
 {%- endmacro %}
